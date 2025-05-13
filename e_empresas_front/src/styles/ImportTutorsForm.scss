@@ -1,0 +1,57 @@
+.import-form-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+
+  h2 {
+    margin-bottom: 20px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+
+    input[type="file"] {
+      display: block;
+      margin-top: 10px;
+    }
+  }
+
+  .alert {
+    margin: 15px 0;
+    padding: 10px;
+    border-radius: 4px;
+    white-space: pre-line;
+
+    &-error {
+      color: red;
+      background-color: #ffeeee;
+      border: 1px solid red;
+    }
+
+    &-success {
+      color: green;
+      background-color: #eeffee;
+      border: 1px solid green;
+    }
+  }
+
+  .btn-submit {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &.loading {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+}
