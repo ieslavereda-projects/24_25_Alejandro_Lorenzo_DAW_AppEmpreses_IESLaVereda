@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../styles//UserForm.scss";
 
 const UserForm = ({ onUserCreated }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [isStudent, setIsStudent] = useState(false);
@@ -13,55 +14,49 @@ const UserForm = ({ onUserCreated }) => {
   const [nia, setNia] = useState("");
   const [nif, setNif] = useState("");
   const [gender, setGender] = useState("");
-  const [photo, setPhoto] = useState(null);
-  const [status, setStatus] = useState(true);
-  const [emailVerified, setEmailVerified] = useState(false);
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
-  // Función para manejar el envío del formulario
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validar campos
     if (!name || !email || !password) {
       setError("Nombre, correo electrónico y contraseña son obligatorios");
+      return;
+    }
+
+    if (nia && isNaN(nia)) {
+      setError("El NIA debe ser un número");
       return;
     }
 
     const formData = new FormData();
     formData.append("name", name);
     formData.append("email", email);
-    formData.append("phone", phone);
     formData.append("password", password);
-    formData.append("is_admin", isAdmin);
-    formData.append("is_student", isStudent);
-    formData.append("is_tutor", isTutor);
+    formData.append("is_admin", isAdmin ? '1' : '0');
+    formData.append("is_student", isStudent ? '1' : '0');
+    formData.append("is_tutor", isTutor ? '1' : '0');
     formData.append("study_cycle", studyCycle);
     formData.append("nia", nia);
     formData.append("nif", nif);
     formData.append("gender", gender);
-    if (photo) {
-      formData.append("photo", photo);
-    }
-    formData.append("status", status);
-    formData.append("email_verified", emailVerified);
 
     try {
       const response = await axios.post("http://localhost:8000/api/users", formData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      // Manejar respuesta exitosa
-      if (response.status === 200) {
+      if (response.status === 201) {
         setSuccess(true);
         setError(null);
         setName("");
         setEmail("");
-        setPhone("");
         setPassword("");
         setIsAdmin(false);
         setIsStudent(false);
@@ -70,25 +65,28 @@ const UserForm = ({ onUserCreated }) => {
         setNia("");
         setNif("");
         setGender("");
-        setPhoto(null);
-        setStatus(true);
-        setEmailVerified(false);
-        
-        // Llamar al callback para notificar que el usuario ha sido creado
+
         onUserCreated(response.data);
+        navigate("/users");
       }
     } catch (err) {
-      // Manejar error
-      setError("Hubo un error al crear el usuario");
+      if (err.response && err.response.data && err.response.data.errors) {
+        const errorMessages = Object.values(err.response.data.errors).flat().join(" ");
+        setError(errorMessages);
+      } else {
+        setError("Hubo un error al crear el usuario");
+      }
       setSuccess(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
+      <h2>Crear Usuario</h2>
+
       {error && <div className="error">{error}</div>}
-      {success && <div className="success">Usuario creado exitosamente</div>}
-      
+      {success && <div className="success">Usuario creado correctamente</div>}
+
       <div className="form-group">
         <label htmlFor="name">Nombre</label>
         <input
@@ -114,17 +112,6 @@ const UserForm = ({ onUserCreated }) => {
       </div>
 
       <div className="form-group">
-        <label htmlFor="phone">Teléfono</label>
-        <input
-          type="text"
-          id="phone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="Ingrese teléfono"
-        />
-      </div>
-
-      <div className="form-group">
         <label htmlFor="password">Contraseña</label>
         <input
           type="password"
@@ -136,46 +123,58 @@ const UserForm = ({ onUserCreated }) => {
         />
       </div>
 
-      <div className="form-group">
-        <label htmlFor="isAdmin">¿Es Administrador?</label>
-        <input
-          type="checkbox"
-          id="isAdmin"
-          checked={isAdmin}
-          onChange={(e) => setIsAdmin(e.target.checked)}
-        />
+      <div className="form-group roles">
+        <label>Roles</label>
+        <div>
+          <section>
+            <label htmlFor="isAdmin">Administrador</label>
+            <input
+              type="checkbox"
+              id="isAdmin"
+              checked={isAdmin}
+              onChange={(e) => setIsAdmin(e.target.checked)}
+            />
+          </section>
+          <section>
+            <label htmlFor="isStudent">Estudiante</label>
+            <input
+              type="checkbox"
+              id="isStudent"
+              checked={isStudent}
+              onChange={(e) => setIsStudent(e.target.checked)}
+            />
+          </section>
+          <section>
+            <label htmlFor="isTutor">Tutor</label>
+            <input
+              type="checkbox"
+              id="isTutor"
+              checked={isTutor}
+              onChange={(e) => setIsTutor(e.target.checked)}
+            />
+          </section>
+
+        </div>
+
+
       </div>
 
       <div className="form-group">
-        <label htmlFor="isStudent">¿Es Estudiante?</label>
-        <input
-          type="checkbox"
-          id="isStudent"
-          checked={isStudent}
-          onChange={(e) => setIsStudent(e.target.checked)}
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="isTutor">¿Es Tutor?</label>
-        <input
-          type="checkbox"
-          id="isTutor"
-          checked={isTutor}
-          onChange={(e) => setIsTutor(e.target.checked)}
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="studyCycle">Ciclo de estudio</label>
-        <input
-          type="text"
+        <label htmlFor="studyCycle">Curso</label>
+        <select
           id="studyCycle"
           value={studyCycle}
           onChange={(e) => setStudyCycle(e.target.value)}
-          placeholder="Ingrese ciclo de estudio"
-        />
+          required
+        >
+          <option value="">Seleccionar</option>
+          <option value="DAW">DAW</option>
+          <option value="DAM">DAM</option>
+          <option value="ASIR">ASIR</option>
+          <option value="ESTETICA">ESTÉTICA</option>
+        </select>
       </div>
+
 
       <div className="form-group">
         <label htmlFor="nia">NIA</label>
@@ -207,42 +206,14 @@ const UserForm = ({ onUserCreated }) => {
           onChange={(e) => setGender(e.target.value)}
         >
           <option value="">Seleccionar</option>
-          <option value="male">Masculino</option>
-          <option value="female">Femenino</option>
-          <option value="other">Otro</option>
+          <option value="masculino">Masculino</option>
+          <option value="femenino">Femenino</option>
+          <option value="otro">Otro</option>
         </select>
       </div>
-
-      <div className="form-group">
-        <label htmlFor="photo">Foto</label>
-        <input
-          type="file"
-          id="photo"
-          onChange={(e) => setPhoto(e.target.files[0])}
-        />
+      <div className="button">
+        <button type="submit">Crear Usuario</button>
       </div>
-
-      <div className="form-group">
-        <label htmlFor="status">Estado</label>
-        <input
-          type="checkbox"
-          id="status"
-          checked={status}
-          onChange={(e) => setStatus(e.target.checked)}
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="emailVerified">Correo verificado</label>
-        <input
-          type="checkbox"
-          id="emailVerified"
-          checked={emailVerified}
-          onChange={(e) => setEmailVerified(e.target.checked)}
-        />
-      </div>
-
-      <button type="submit">Crear Usuario</button>
     </form>
   );
 };
