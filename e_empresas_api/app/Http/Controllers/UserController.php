@@ -26,7 +26,7 @@ class UserController extends Controller
                 'is_student' => 'nullable|boolean',
                 'is_tutor' => 'nullable|boolean',
                 'study_cycle' => 'nullable|string|max:255',
-                'nia' => 'nullable|numeric|max:11',
+                'nia' => 'nullable|digits_between:1,11',
                 'nif' => 'nullable|string|max:20',
                 'gender' => 'nullable|string|max:20',
             ]);
@@ -44,11 +44,12 @@ class UserController extends Controller
                 'gender' => $validated['gender'],
             ]);
 
+            return response()->json(['message' => 'Usuario creado correctamente'], 201);
+
         } catch (Exception $e) {
             return response()->json(['error' => 'Hubo un error interno'], 500);
         }
 
-        return response()->json(['message' => 'User created successfully', 'user' => $user], 201);
     }
 
 
