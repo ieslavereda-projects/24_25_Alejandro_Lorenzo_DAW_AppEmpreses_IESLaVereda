@@ -35,7 +35,15 @@ Route::post('/login', function (Request $request) {
     return response()->json(['token' => $token]);
 });
 
-Route::post('/logout', [Auth::logout()]);
+Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
+    $user = $request->user();
+
+    if ($user) {
+        $user->currentAccessToken()->delete();
+    }
+
+    return response()->json(['message' => 'Sesión cerrada correctamente']);
+});
 
 Route::middleware('auth:sanctum')->post('/tutors/import', [TutorsImportController::class, 'import']);
 
