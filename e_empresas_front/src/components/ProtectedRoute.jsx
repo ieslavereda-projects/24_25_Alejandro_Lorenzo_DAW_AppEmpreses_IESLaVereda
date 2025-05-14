@@ -1,14 +1,23 @@
 import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ element, requiredRole }) => {
     const [authorized, setAuthorized] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const token = localStorage.getItem('authToken');
-                const res = await fetch('http://localhost:8000/api/user', {
+
+                if (!token) {
+                    setAuthorized(false);
+                    navigate('/login');
+                    return;
+                }
+
+                const res = await fetch('/api/user', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Accept': 'application/json',
