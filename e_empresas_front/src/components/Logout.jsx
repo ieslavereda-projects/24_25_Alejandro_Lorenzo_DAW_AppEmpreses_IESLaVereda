@@ -1,9 +1,17 @@
 import axios from 'axios';
 
 const LogoutButton = () => {
+
   const handleLogout = async () => {
     try {
-      const response = await axios.post('/logout');
+      await axios.post('/api/logout', {}, {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          Accept: 'application/json'
+        }
+      });
+
       localStorage.removeItem('authToken');
       window.location.href = '/login';
     } catch (error) {
@@ -11,11 +19,12 @@ const LogoutButton = () => {
     }
   };
 
+
   return (
     <button onClick={handleLogout}>
       Cerrar sesión
     </button>
   );
-};
-
+}
 export default LogoutButton;
+
