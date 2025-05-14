@@ -46,14 +46,14 @@ const UserForm = ({ onUserCreated }) => {
     formData.append("gender", gender);
 
     try {
-      const response = await axios.post("http://localhost:8000/api/users", formData, {
+      const response = await axios.post("/api/users", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 
-      if (response.status === 201) {
-        setSuccess(true);
+      if (response.status === 201 && response.data.message) {
+        setSuccess(true); 
         setError(null);
         setName("");
         setEmail("");
@@ -66,8 +66,8 @@ const UserForm = ({ onUserCreated }) => {
         setNif("");
         setGender("");
 
-        onUserCreated(response.data);
-        navigate("/users");
+        alert('Usuario creado exitosamente');
+        navigate("/user-menu");
       }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.errors) {
