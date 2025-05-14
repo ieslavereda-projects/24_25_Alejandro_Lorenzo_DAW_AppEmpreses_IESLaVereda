@@ -68,7 +68,7 @@ const EditUser = () => {
         formData.append('_method', 'PUT');
 
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('authToken');
             await axios.post(`/api/users/${id}`, formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
