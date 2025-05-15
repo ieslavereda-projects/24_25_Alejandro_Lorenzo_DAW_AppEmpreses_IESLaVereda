@@ -28,6 +28,7 @@ const Navbar = () => {
           <>
             <Link to="/import-tutors" className="navbar__link">Importar Tutores</Link>
             <Link to="/user-menu" className="navbar__link">Usuarios</Link>
+            <Link to="/company-menu" className="navbar__link">Empresas</Link>
             <LogoutButton />
           </>
         )}
