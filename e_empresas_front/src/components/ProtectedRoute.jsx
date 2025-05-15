@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const ProtectedRoute = ({ element, requiredRole }) => {
+const ProtectedRoute = ({ element, requiredRoles = [] }) => {
     const [authorized, setAuthorized] = useState(null);
     const navigate = useNavigate();
 
@@ -33,15 +33,16 @@ const ProtectedRoute = ({ element, requiredRole }) => {
                     student: user.is_student,
                 };
 
-                setAuthorized(!!roles[requiredRole]);
+                const hasRole = requiredRoles.some(role => roles[role]);
+                setAuthorized(hasRole);
             } catch (err) {
                 console.error('Error al obtener usuario autenticado', err);
                 setAuthorized(false);
             }
-        }
+        };
 
         fetchUser();
-    }, [requiredRole]);
+    }, [requiredRoles]);
 
     if (authorized === null) return null;
 
