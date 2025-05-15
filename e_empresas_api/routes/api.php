@@ -32,7 +32,14 @@ Route::post('/login', function (Request $request) {
     }
 
     $token = $user->createToken('api-token')->plainTextToken;
-    return response()->json(['token' => $token]);
+    return response()->json([
+        'token' => $token,
+        'user' => [
+            'id' => $user->id,
+            'email' => $user->email,
+            'name' => $user->name,
+        ]
+    ]);
 });
 
 Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
@@ -52,3 +59,8 @@ Route::middleware('auth:sanctum')->post('/companies/import', [CompanyImportContr
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/companies/{company}/reviews', [CompanyReviewController::class, 'index']);
+Route::post('/companies/{company}/reviews', [CompanyReviewController::class, 'store']);
+Route::delete('/companies/{company}/reviews/{review}', [CompanyReviewController::class, 'destroy']
+);
