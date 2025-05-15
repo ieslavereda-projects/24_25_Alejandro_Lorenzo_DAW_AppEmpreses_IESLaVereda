@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/CompanyManager.scss';
+import ImportCompanies from '../components/ImportCompanies';
 
 axios.defaults.baseURL = 'http://localhost:8000';
 axios.defaults.withCredentials = true;
@@ -111,10 +112,10 @@ const CompanyManager = () => {
                     {[
                         { label: 'Nombre', name: 'name' },
                         { label: 'Manager', name: 'manager' },
-                        { label: 'Teléfono', name: 'phone' },
+                        { label: 'Teléfono/s', name: 'phone' },
                         { label: 'Email', name: 'email' },
                         { label: 'Dirección', name: 'address' },
-                        { label: 'Industria', name: 'industry' },
+                        { label: 'Ciclo/s', name: 'industry' },
                         { label: 'Observaciones', name: 'observations' },
                     ].map(({ label, name }) => (
                         <div key={name} className="form-group">
@@ -159,16 +160,24 @@ const CompanyManager = () => {
                         {editId && <button type="button" onClick={cancelEdit}>Cancelar</button>}
                     </div>
                 </form>
+
+                <span>
+                    {message && <p className="message">{message}</p>}
+                </span>
+
+                <section>
+                    <ImportCompanies onImport={fetchCompanies} />
+                </section>
+                
             </section>
 
-            <section>
-                <h3>Empresas registradas</h3>
+            <section className='companies'>
+                <h2>Empresas registradas</h2>
                 <table className="company-table">
                     <thead>
                         <tr>
                             <th>Nombre</th>
                             <th>Email</th>
-                            <th>Industria</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -177,7 +186,6 @@ const CompanyManager = () => {
                             <tr key={c.id}>
                                 <td>{c.name}</td>
                                 <td>{c.email}</td>
-                                <td>{c.industry}</td>
                                 <td>
                                     <button onClick={() => handleEdit(c)}>Editar</button>
                                     <button onClick={() => handleDelete(c.id)}>Eliminar</button>
@@ -188,7 +196,6 @@ const CompanyManager = () => {
                 </table>
             </section>
 
-            {message && <p className="message">{message}</p>}
 
 
         </div>
