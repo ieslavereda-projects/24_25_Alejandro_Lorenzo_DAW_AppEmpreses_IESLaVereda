@@ -6,6 +6,8 @@ import Home from "./pages/Home";
 import Navbar from "./components/Navbar";
 import CompanyManager from "./pages/CompanyManager";
 import UserManager from "./pages/UserManager";
+import CompaniesList from "./components/CompaniesList";
+import CompanyDetail from "./components/CompanyDetail";
 
 function App() {
   return (
@@ -14,10 +16,16 @@ function App() {
       <Routes>
         <Route path="/login" element={<LoginPage />} />
 
+        <Route path="/companies" element={<CompaniesList />} />
+        <Route path="/companies/:id" element={<CompanyDetail />} />
+
         <Route
           path="/user-menu"
           element={
-            <ProtectedRoute requiredRoles={["admin"]} element={<UserManager />} />
+            <ProtectedRoute
+              requiredRoles={["admin"]}
+              element={<UserManager />}
+            />
           }
         />
 
