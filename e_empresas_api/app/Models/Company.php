@@ -20,9 +20,10 @@ class Company extends Model
         'website',
         'industry',
         'observations',
-        'allows_erasmus'
+        'allows_erasmus',
+        'is_private',
     ];
-
+    
     protected $casts = [
         'allows_erasmus' => 'boolean'
     ];
