@@ -2,20 +2,33 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
+    use HasFactory;
+
+    protected $table = 'companies';
+
     protected $fillable = [
-        'name', 'manager', 'phone', 'email', 'address',
-        'website', 'industry', 'obsevations', 'allows_erasmus'
+        'name',
+        'manager',
+        'phone',
+        'email',
+        'address',
+        'website',
+        'industry',
+        'observations',
+        'allows_erasmus'
     ];
 
-    public function comments() {
-        return $this->hasMany(Comment::class, 'id_company');
-    }
+    protected $casts = [
+        'allows_erasmus' => 'boolean'
+    ];
 
-    public function reviews() {
+    public function reviews()
+    {
         return $this->hasMany(CompanyReview::class, 'id_company');
     }
 }
