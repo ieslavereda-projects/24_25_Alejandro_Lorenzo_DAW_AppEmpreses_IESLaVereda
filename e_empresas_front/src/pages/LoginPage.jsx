@@ -20,8 +20,10 @@ const LoginPage = () => {
 
     if (response.ok) {
       localStorage.setItem('authToken', data.token);
+      localStorage.setItem('userId', data.user.id);
       window.location.href = '/';
-    } else {
+    }
+    else {
       setError(data.message || 'Algo salió mal');
     }
   };
