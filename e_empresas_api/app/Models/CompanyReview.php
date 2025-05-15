@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class CompanyReview extends Model
 {
+    protected $table = "company_reviews";
     protected $fillable = [
         'id_company', 'id_student', 'title', 'comment',
         'rating', 'work_environment', 'mentoring',
