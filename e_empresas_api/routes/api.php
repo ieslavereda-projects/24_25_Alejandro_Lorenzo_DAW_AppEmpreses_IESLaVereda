@@ -2,10 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 use App\Http\Controllers\TutorsImportController;
+use App\Http\Controllers\CompanyImportController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyDeregisterRequestController;
@@ -46,6 +46,8 @@ Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
 });
 
 Route::middleware('auth:sanctum')->post('/tutors/import', [TutorsImportController::class, 'import']);
+
+Route::middleware('auth:sanctum')->post('/companies/import', [CompanyImportController::class, 'import']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
