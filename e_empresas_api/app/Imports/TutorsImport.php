@@ -3,48 +3,52 @@
 namespace App\Imports;
 
 use App\Models\User;
-use Maatwebsite\Excel\Concerns\ToModel;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Facades\Log;
 
-class TutorsImport implements ToModel, WithHeadingRow
+class TutorsImport implements ToCollection
 {
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        try {
-            $name = isset($row['nombre']) && !empty($row['nombre']) ? $row['nombre'] . ' ' . $row['primer_apellido'] . ' ' . $row['segundo_apellido'] : 'Desconocido';
-            $email = isset($row['correo_electronico']) && !empty($row['correo_electronico']) ? $row['correo_electronico'] : strtolower(str_replace(' ', '', $name)) . '@default.com';
-            $studyCycle = isset($row['departamento']) && !empty($row['departamento']) ? $row['departamento'] : 'No asignado';
-            $nif = isset($row['nif']) && !empty($row['nif']) ? $row['nif'] : null;
-            $password = isset($row['telefono']) && !empty($row['telefono']) ? $row['telefono'] : '1234';
+        $rows = $rows->skip(2);
 
-            $user = User::where('email', $email)->first();
+        $groups = $rows->groupBy(fn($row) => trim($row[27] ?? ''));
 
-            if ($user) {
-                $user->nif = $nif;
-                $user->name = $name;
-                $user->study_cycle = $studyCycle;
-                $user->password = $password;
-                $user->is_tutor = true; 
-                $user->save();
-            } else {
-                User::create([
-                    'nif' => $nif,
-                    'name' => $name,
-                    'password' => $password,
-                    'email' => $email,
-                    'study_cycle' => $studyCycle,
-                    'is_tutor' => true,
-                ]);
+        Log::info("Tutores únicos detectados: " . count($groups));
+
+        foreach ($groups as $key => $group) {
+            $firstIndex = $group->keys()->first() + 3;
+            $nifTutor = trim($group->first()[27] ?? '');
+
+            if (!$nifTutor) {
+                Log::warning("Fila $firstIndex: NIF de tutor vacío, se ignora grupo.");
+                continue;
             }
 
-            return null; 
+            $row = $group->first();
+            $name = trim(($row[28] ?? '') . ' ' . ($row[29] ?? '') . ' ' . ($row[30] ?? ''));
+            $phone = trim($row[31] ?? '');
+            $email = filter_var(trim($row[32] ?? ''), FILTER_VALIDATE_EMAIL) ?: null;
+            $department = trim($row[33] ?? '');
 
-        } catch (\Exception $e) {
-            \Log::error("Error durante la importación de un usuario: " . $e->getMessage());
-            return null;
+            $data = [
+                'name'        => $name ?: 'Desconocido',
+                'nif'         => $nifTutor,
+                'email'       => $email ?: strtolower(str_replace(' ', '', $name)) . '@default.com',
+                'study_cycle' => $department ?: 'No asignado',
+                'password'    => bcrypt($phone ?: '1234'),
+                'is_tutor'    => true,
+            ];
+
+            Log::info("Fila $firstIndex: importando tutor NIF={$nifTutor}", $data);
+
+            User::updateOrCreate(
+                ['nif' => $nifTutor],
+                $data
+            );
         }
+
+        Log::info("Importación de tutores completada.");
     }
-
-
-
 }

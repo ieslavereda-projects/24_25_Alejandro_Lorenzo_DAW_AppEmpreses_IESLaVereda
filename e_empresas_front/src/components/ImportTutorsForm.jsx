@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-import '../styles/ImportTutorsForm.scss';
-
 axios.defaults.withCredentials = true;
 
 const ImportTutorsForm = () => {
@@ -84,7 +82,7 @@ const ImportTutorsForm = () => {
   return (
     <div className="import-form-container">
       <form id="fileForm" onSubmit={handleSubmit}>
-        <h2>Importar Tutores</h2>
+        <h2>Importar Tutores Desde Excel</h2>
 
         <div className="form-group">
           <input
