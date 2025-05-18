@@ -8,6 +8,8 @@ import CompanyManager from "./pages/CompanyManager";
 import UserManager from "./pages/UserManager";
 import CompaniesList from "./components/CompaniesList";
 import CompanyDetail from "./components/CompanyDetail";
+import ImportTutorsForm from "./components/ImportTutorsForm";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -35,6 +37,26 @@ function App() {
             <ProtectedRoute
               requiredRoles={["admin"]}
               element={<CompanyManager />}
+            />
+          }
+        />
+
+        <Route
+          path="/import-tutors"
+          element={
+            <ProtectedRoute
+              requiredRoles={["admin", "tutor"]}
+              element={<ImportTutorsForm />}
+            />
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute
+              requiredRoles={["admin", "tutor"]}
+              element={<Profile />}
             />
           }
         />
