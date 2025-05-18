@@ -23,7 +23,7 @@ class Company extends Model
         'allows_erasmus',
         'is_private',
     ];
-    
+
     protected $casts = [
         'allows_erasmus' => 'boolean'
     ];
@@ -31,5 +31,9 @@ class Company extends Model
     public function reviews()
     {
         return $this->hasMany(CompanyReview::class, 'id_company');
+    }
+    public function tutorComments()
+    {
+        return $this->hasMany(Comment::class, 'id_company');
     }
 }

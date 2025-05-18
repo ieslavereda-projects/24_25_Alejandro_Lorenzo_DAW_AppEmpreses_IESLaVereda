@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class CompanyController extends Controller
@@ -67,7 +68,6 @@ class CompanyController extends Controller
         return response()->json($company);
     }
 
-
     public function destroy($id)
     {
         try {
@@ -78,5 +78,10 @@ class CompanyController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    public function tutorComments()
+    {
+        return $this->hasMany(Comment::class, 'id_company');
     }
 }

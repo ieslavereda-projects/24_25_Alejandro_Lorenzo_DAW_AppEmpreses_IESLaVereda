@@ -8,18 +8,34 @@ const CompanyDetail = () => {
     const token = localStorage.getItem('authToken');
     const userId = parseInt(localStorage.getItem('userId'), 10);
     const { id } = useParams();
-
     const [company, setCompany] = useState(null);
     const [reviews, setReviews] = useState([]);
+    const [isTutor, setIsTutor] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [editingId, setEditingId] = useState(null);
+    const [tutorForm, setTutorForm] = useState({ comment: '' });
+
+    const [tutorComments, setTutorComments] = useState([]);
+
     const [form, setForm] = useState({
         title: '',
         comment: '',
-        rating: 1,
-        work_environment: 1,
-        mentoring: 1,
-        learning_value: 1,
+        rating: 3,
+        work_environment: 3,
+        mentoring: 3,
+        learning_value: 3,
         would_recommend: true,
     });
+
+    useEffect(() => {
+        const tooltipTrigger = document.getElementById('popover');
+
+        if (tooltipTrigger && window.bootstrap?.Tooltip) {
+            const tooltip = new window.bootstrap.Tooltip(tooltipTrigger);
+
+            return () => tooltip.dispose();
+        }
+    }, []);
 
     useEffect(() => {
         axios.get(`/api/companies/${id}`)
@@ -29,6 +45,28 @@ const CompanyDetail = () => {
             .then(({ data }) => setReviews(data))
             .catch(err => console.error('Error al cargar comentarios:', err));
     }, [id]);
+
+    useEffect(() => {
+        axios.get(`/api/companies/${id}`)
+            .then(({ data }) => setCompany(data));
+
+        axios.get(`/api/companies/${id}/reviews`)
+            .then(({ data }) => setReviews(data))
+            .catch(err => console.error('Error al cargar comentarios:', err));
+
+        axios.get(`/api/users/${userId}`)
+            .then(({ data }) => {
+                setIsTutor(data.is_tutor);
+                setIsAdmin(data.is_admin);
+                if (data.is_tutor) {
+                    axios.get(`/api/companies/${id}/tutor-comments`)
+                        .then(({ data }) => setTutorComments(data))
+                        .catch(err => console.error('Error al cargar comentarios de tutor:', err));
+                }
+            })
+            .catch(err => console.error('Error al comprobar rol de usuario:', err));
+    }, [id, userId]);
+
 
     const handleChange = e => {
         const { name, value, type, checked } = e.target;
@@ -93,6 +131,52 @@ const CompanyDetail = () => {
             });
     };
 
+    const handleTutorChange = e => {
+        setTutorForm({ ...tutorForm, comment: e.target.value });
+    };
+
+    const handleTutorSubmit = e => {
+        e.preventDefault();
+        const method = editingId ? 'put' : 'post';
+        const url = editingId
+            ? `/api/tutor-comments/${editingId}`
+            : `/api/companies/${id}/tutor-comments`;
+
+        axios[method](url, {
+            comment: tutorForm.comment,
+            id_tutor: userId
+        }, { headers: { Authorization: `Bearer ${token}` } })
+            .then(({ data }) => {
+                if (editingId) {
+                    setTutorComments(prev =>
+                        prev.map(c => (c.id === data.id ? data : c))
+                    );
+                } else {
+                    setTutorComments(prev => [data, ...prev]);
+                }
+                setTutorForm({ comment: '' });
+                setEditingId(null);
+            })
+            .catch(err => alert('Error al guardar'));
+    };
+
+    const handleTutorDelete = commentId => {
+        if (!window.confirm('¿Eliminar comentario de tutor?')) return;
+        axios.delete(`/api/tutor-comments/${commentId}`, {
+            headers: { Authorization: `Bearer ${token}` }
+        })
+            .then(() => {
+                setTutorComments(prev => prev.filter(c => c.id !== commentId));
+            })
+            .catch(() => alert('Error al eliminar'));
+    };
+
+    const handleTutorEdit = comment => {
+        setTutorForm({ comment: comment.comment });
+        setEditingId(comment.id);
+    };
+
+
     if (!company) return <p>Cargando...</p>;
 
     return (
@@ -102,7 +186,7 @@ const CompanyDetail = () => {
             <hr />
 
             <section className="new-review">
-                <h3>Añadir comentario</h3>
+                <h3>Añade un comentario</h3>
                 <form onSubmit={handleSubmit}>
                     <input
                         name="title"
@@ -119,17 +203,31 @@ const CompanyDetail = () => {
                         required
                     />
 
-                    {['rating', 'work_environment', 'mentoring', 'learning_value'].map(field => (
+                    {[
+                        { field: 'rating', label: 'Puntuación general' },
+                        { field: 'work_environment', label: 'Entorno laboral' },
+                        { field: 'mentoring', label: 'Mentoría' },
+                        { field: 'learning_value', label: 'Valor de aprendizaje' }
+                    ].map(({ field, label }) => (
                         <div key={field}>
-                            <label>{field.replace('_', ' ')}:</label>
+                            <label>{label}:</label>
                             <select
                                 name={field}
                                 value={form[field]}
                                 onChange={handleChange}
                             >
-                                {[1, 2, 3, 4, 5].map(n => (
-                                    <option key={`${field}-${n}`} value={n}>{n}</option>
+                                {[
+                                    { field: 1, label: 'Muy malo' },
+                                    { field: 2, label: 'Malo' },
+                                    { field: 3, label: 'Regular' },
+                                    { field: 4, label: 'Bueno' },
+                                    { field: 5, label: 'Excelente' }
+                                ].map(n => (
+                                    <option key={`rating-${n.field}`} value={n.field}>
+                                        {n.label}
+                                    </option>
                                 ))}
+
                             </select>
                         </div>
                     ))}
@@ -147,36 +245,85 @@ const CompanyDetail = () => {
                     <button type="submit">Enviar</button>
                 </form>
             </section>
+            {isTutor && (
+                <section className="tutor-comments">
+                    <h3>Comentarios de tutores</h3>
+                    <form onSubmit={handleTutorSubmit}>
+                        <textarea
+                            value={tutorForm.comment}
+                            onChange={handleTutorChange}
+                            placeholder="Escribe tu comentario como tutor"
+                            required
+                        />
+                        <button type="submit">
+                            {editingId ? 'Actualizar' : 'Publicar'}
+                        </button>
+                        {editingId && (
+                            <button type="button" onClick={() => {
+                                setEditingId(null);
+                                setTutorForm({ comment: '' });
+                            }}>
+                                Cancelar
+                            </button>
+                        )}
+                    </form>
+
+                    <hr />
+                    {tutorComments.length === 0 ? (
+                        <p>No hay comentarios de tutores aún.</p>
+                    ) : (
+                        tutorComments.map(c => (
+                            <div key={c.id} className="review-card shadow-sm rounded-4 p-3">
+                                <p className='text-break'>{c.comment}</p>
+                                <small>{new Date(c.created_at).toLocaleDateString()}</small>
+
+                                {(c.id_tutor === userId || isAdmin) && (
+                                    <div className="mt-2">
+                                        {c.id_tutor === userId && (
+                                            <button onClick={() => handleTutorEdit(c)}>Editar</button>
+                                        )}
+                                        <button onClick={() => handleTutorDelete(c.id)}>Eliminar</button>
+                                    </div>
+                                )}
+
+                            </div>
+                        ))
+                    )}
+                </section>
+            )}
 
             <section className="reviews">
                 <h3>Comentarios</h3>
+                <hr />
                 {orderedReviews.length === 0 ? (
                     <p>No hay comentarios aún.</p>
                 ) : (
                     orderedReviews.map(r => (
-                        <div key={r.id} className="review-card">
-                            <section>
+                        <div key={r.id} className="review-card shadow-sm rounded-4 p-3">
+                            <section className='review-card-title'>
                                 <h4>{r.title}</h4>
-                                <p>{r.comment}</p>
                                 <small>{new Date(r.created_at).toLocaleDateString()}</small>
-
                             </section>
-                            <section>
+                            <section className='review-card-comment'>
+                                <p className='text-break'>{r.comment}</p>
+                            </section>
+                            <section className='review-card-ratings'>
                                 <p>Puntuación general: <StarRating value={r.rating} /></p>
                                 <p>Entorno de trabajo: <StarRating value={r.work_environment} /></p>
-                                <p>Mentoring y retroalimentación: <StarRating value={r.mentoring} /></p>
+                                <p>Mentoring: <StarRating value={r.mentoring} /></p>
                                 <p>Aprendizaje: <StarRating value={r.learning_value} /></p>
                                 <p>Recomendaría: {r.would_recommend ? 'Sí' : 'No'}</p>
                             </section>
 
-
                             {r.id_student === userId && (
-                                <button
-                                    onClick={() => handleDelete(r.id)}
-                                    className="btn-delete-review"
-                                >
-                                    Eliminar mi comentario
-                                </button>
+                                <section className='review-card-delete'>
+                                    <button
+                                        onClick={() => handleDelete(r.id)}
+                                        className="btn-delete-review"
+                                    >
+                                        Eliminar mi comentario
+                                    </button>
+                                </section>
                             )}
                         </div>
                     ))
