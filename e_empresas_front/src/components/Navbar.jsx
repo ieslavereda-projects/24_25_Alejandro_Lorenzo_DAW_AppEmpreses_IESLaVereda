@@ -24,13 +24,13 @@ const Navbar = () => {
   const isLoggedIn = !!user;
 
   return (
-    <nav className="navbar">
-      <div className="navbar__logo">AppEmpreses</div>
+    <nav className="navbar navbar-dark bg-dark ps-5 pe-5">
+      <div className="navbar__logo navbar-brand">AppEmpreses</div>
       <div className="navbar__links">
         <Link to="/" className="navbar__link">Inicio</Link>
 
         {!isLoggedIn && (
-          <Link to="/login" className="navbar__link">Iniciar Sesión</Link>
+          <Link to="/login"><button>Inciar Sesión</button></Link>
         )}
 
         {isLoggedIn && (
@@ -49,9 +49,7 @@ const Navbar = () => {
               </>
             )}
 
-            {user.is_student && (
-              <Link to="/companies" className="navbar__link">Ver empresas</Link>
-            )}
+            <Link to="/companies" className="navbar__link">Ver empresas</Link>
 
             <LogoutButton />
           </>
