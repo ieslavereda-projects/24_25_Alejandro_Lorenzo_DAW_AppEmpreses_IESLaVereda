@@ -1,38 +1,29 @@
-.App {
-  text-align: center;
+button {
+  padding: 10px 15px 10px 15px;
+  margin: 2px !important;
+  border: none;
+  border-radius: 5px !important; /* El important es necesario para los botones dentro de tablas */
+  transition: all 0.2s !important;
+  font-weight: 600;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Esto es para que la X de quitar usuarios en la lista de tareas no tenga los hover de boton */
+.badge>button:hover{
+  transform: none !important;
+  box-shadow: none !important;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+button:hover:not(:disabled) {
+  transform: translate(-3px, -3px);
+  box-shadow: 3px 3px 0px #000000cb;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.edit {
+  color: #313f37;
+  background-color: #00f565;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.delete {
+  color: #ffedec;
+  background-color: #f51101;
 }
