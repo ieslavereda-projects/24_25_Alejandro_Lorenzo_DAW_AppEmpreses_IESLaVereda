@@ -1,5 +1,5 @@
 .user-manager {
-  height: 80vh;
+  height: fit-content;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -16,14 +16,14 @@
   }
 
   section {
-    min-width: 100%;
+    width: max-content;
     display: flex;
     flex-direction: column;
     align-items: start;
   }
 
   .user-form {
-    width: 100%;
+    width: max-content;
     margin: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -71,18 +71,14 @@
         border: none;
         border-radius: 4px;
       }
-      .secondary {
-        background: #6c757d;
-        color: #fff;
-        padding: 0.5rem 1rem;
-        border: none;
-        border-radius: 4px;
-      }
+    }
+    button {
+      width: 100%;
     }
 
     .message {
       grid-column: span 2;
-      color: green;
+      color: #007bff;
       font-weight: 600;
     }
   }
@@ -90,34 +86,24 @@
   .table-wrapper {
     max-height: 700px;
     overflow-y: auto;
+    button {
+      margin-top: 2px;
+      width: 100%;
+      
+    }
+
   }
 
-  .user-table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th,
-    td {
-      padding: 0.75rem;
-      border-bottom: 1px solid #ddd;
-      text-align: left;
-    }
-
-    button {
-      margin-right: 0.5rem;
-      background: none;
-      border: none;
-      color: #007bff;
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+  th,
+  td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
   }
 }
 
 .import-form-container {
-	padding: 20px;
+  padding: 20px;
 
   h2 {
     margin-bottom: 20px;

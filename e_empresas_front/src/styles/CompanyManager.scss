@@ -1,8 +1,7 @@
 .companies {
-  height: 100px;
+  height: fit-content;
 }
 .company-manager {
-  height: 80vh;
   display: grid;;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
@@ -58,6 +57,7 @@
       gap: 15px;
 
       button {
+        width: 100%;
         padding: 10px 15px;
         background: #2563eb;
         color: white;
@@ -65,8 +65,8 @@
         border-radius: 0.5rem;
         cursor: pointer;
 
-        &:hover {
-          background: #1e40af;
+        &:first-child {
+          background-color: #1d4ed8;
         }
 
         &:last-child {
@@ -93,6 +93,12 @@
     width: 100%;
     border-collapse: collapse;
 
+    button {
+      width: 100%;
+      padding: 0;
+      
+    }
+
     tr {
       height: 40px;
     }
@@ -107,18 +113,6 @@
          white-space: nowrap;  
 
     }
-
-    button {
-      margin-right: 0.5rem;
-      color: #2563eb;
-      background: none;
-      border: none;
-      cursor: pointer;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
   }
 }
 
@@ -127,7 +121,6 @@
   color: #fff;
   border: none;
   padding: 10px 20px;
-  margin-right: 10px;
   border-radius: 5px;
   cursor: not-allowed;
   transition: all 0.3s;

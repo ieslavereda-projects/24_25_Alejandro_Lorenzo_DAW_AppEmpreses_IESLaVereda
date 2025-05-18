@@ -300,8 +300,8 @@ const UserManager = () => {
                                         <td>{u.email}</td>
                                         <td>{roles.join(', ')}</td>
                                         <td>
-                                            <button onClick={() => handleEdit(u)}>Editar</button>
-                                            <button onClick={() => handleDelete(u.id)}>Eliminar</button>
+                                            <button className='edit' onClick={() => handleEdit(u)}>Editar</button>
+                                            <button className='delete' onClick={() => handleDelete(u.id)}>Eliminar</button>
                                         </td>
                                     </tr>
                                 );

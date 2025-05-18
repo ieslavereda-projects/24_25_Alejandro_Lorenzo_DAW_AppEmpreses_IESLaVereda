@@ -186,9 +186,9 @@ const CompanyManager = () => {
                             <tr key={c.id}>
                                 <td>{c.name}</td>
                                 <td>{c.email}</td>
-                                <td>
-                                    <button onClick={() => handleEdit(c)}>Editar</button>
-                                    <button onClick={() => handleDelete(c.id)}>Eliminar</button>
+                                <td className='text-wrap'>
+                                    <button className='edit' onClick={() => handleEdit(c)}>Editar</button>
+                                    <button className='delete' onClick={() => handleDelete(c.id)}>Eliminar</button>
                                 </td>
                             </tr>
                         ))}
