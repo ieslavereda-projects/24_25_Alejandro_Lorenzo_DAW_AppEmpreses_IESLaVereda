@@ -242,30 +242,34 @@ const CompanyDetail = () => {
                         Lo recomendaría
                     </label>
 
-                    <button type="submit">Enviar</button>
+                    <button type="submit" className='bg-primary w-100'>Enviar</button>
                 </form>
             </section>
             {isTutor && (
-                <section className="tutor-comments">
+                <section className="tutor-comments new-review">
                     <h3>Comentarios de tutores</h3>
-                    <form onSubmit={handleTutorSubmit}>
+                    <form onSubmit={handleTutorSubmit} className='d-flex flex-column'>
                         <textarea
+                            className='form-control'
                             value={tutorForm.comment}
                             onChange={handleTutorChange}
                             placeholder="Escribe tu comentario como tutor"
                             required
                         />
-                        <button type="submit">
-                            {editingId ? 'Actualizar' : 'Publicar'}
-                        </button>
-                        {editingId && (
-                            <button type="button" onClick={() => {
-                                setEditingId(null);
-                                setTutorForm({ comment: '' });
-                            }}>
-                                Cancelar
+                        <section>
+                            <button type="submit">
+                                {editingId ? 'Actualizar' : 'Publicar'}
                             </button>
-                        )}
+                            {editingId && (
+                                <button type="button" className='bg-danger' onClick={() => {
+                                    setEditingId(null);
+                                    setTutorForm({ comment: '' });
+                                }}>
+                                    Cancelar
+                                </button>
+                            )}
+                        </section>
+
                     </form>
 
                     <hr />
