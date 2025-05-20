@@ -10,6 +10,7 @@ import CompaniesList from "./components/CompaniesList";
 import CompanyDetail from "./components/CompanyDetail";
 import ImportTutorsForm from "./components/ImportTutorsForm";
 import Profile from "./pages/Profile";
+import ImportCompanies from "./components/ImportCompanies";
 
 function App() {
   return (
@@ -46,7 +47,12 @@ function App() {
           element={
             <ProtectedRoute
               requiredRoles={["admin", "tutor"]}
-              element={<ImportTutorsForm />}
+              element={
+                <>
+                  <ImportTutorsForm />
+                  <ImportCompanies />
+                </>
+              }
             />
           }
         />
