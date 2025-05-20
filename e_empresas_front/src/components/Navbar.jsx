@@ -4,9 +4,6 @@ import axios from "axios";
 import "../styles/Navbar.scss";
 import LogoutButton from "./Logout";
 
-axios.defaults.baseURL = 'http://localhost:8000';
-axios.defaults.withCredentials = true;
-
 const Navbar = () => {
   const [user, setUser] = useState(null);
 
@@ -44,7 +41,7 @@ const Navbar = () => {
 
             {user.is_tutor && (
               <>
-                <Link to="/import-tutors" className="navbar__link">Importar Tutores</Link>
+                <Link to="/import-tutors" className="navbar__link">Importar por excel</Link>
                 <Link to="/profile" className="navbar__link">Mi Perfil</Link>
               </>
             )}
