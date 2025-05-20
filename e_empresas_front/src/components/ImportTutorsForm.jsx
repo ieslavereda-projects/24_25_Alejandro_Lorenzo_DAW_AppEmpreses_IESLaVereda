@@ -54,7 +54,7 @@ const ImportTutorsForm = () => {
         }
       });
 
-      setSuccess('Importación exitosa: ' + response.data.message);
+      setSuccess('Usuarios importados correctamente');
       setFile(null);
       document.getElementById('fileForm').reset();
     } catch (err) {
