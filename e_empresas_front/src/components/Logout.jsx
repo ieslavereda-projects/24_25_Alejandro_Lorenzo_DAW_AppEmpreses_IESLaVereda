@@ -21,7 +21,7 @@ const LogoutButton = () => {
 
 
   return (
-    <button onClick={handleLogout}>
+    <button onClick={handleLogout} className='align-self-start text-center'>
       Cerrar sesión
     </button>
   );

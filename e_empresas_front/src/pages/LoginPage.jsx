@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import "../styles/LoginPage.scss";
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -8,7 +9,7 @@ const LoginPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const response = await fetch('http://localhost:8000/api/login', {
+    const response = await fetch('/api/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,26 +30,30 @@ const LoginPage = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
-      <div>
-        <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <div className="form-container">
+        <form onSubmit={handleLogin}>
+          <h3 className='text-start'> Iniciar sesión </h3>
+
+          <div>
+            <input
+              type="email"
+              value={email}
+              placeholder='Email'
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              value={password}
+              placeholder='Contraseña'
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          {error && <p>{error}</p>}
+          <button type="submit">Iniciar sesión</button>
+        </form>
       </div>
-      <div>
-        <label>Contraseña</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-      {error && <p>{error}</p>}
-      <button type="submit">Iniciar sesión</button>
-    </form>
   );
 };
 

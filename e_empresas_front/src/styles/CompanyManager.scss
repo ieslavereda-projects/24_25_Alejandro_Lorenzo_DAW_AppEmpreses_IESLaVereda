@@ -1,8 +1,5 @@
-.companies {
-  height: fit-content;
-}
 .company-manager {
-  display: grid;;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   max-width: 90%;
@@ -16,12 +13,7 @@
     margin-bottom: 1rem;
   }
 
-  section {
-    min-width: max-content;
-  }
-
   .company-form {
-    width: 100%;
     margin: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -87,10 +79,9 @@
   }
 
   .company-table {
-    display: block;
-    height: 700px;
-    overflow-y: scroll;
     width: 100%;
+    max-height: 700px;
+    overflow-y: scroll;
     border-collapse: collapse;
 
     button {
@@ -106,8 +97,7 @@
     th,
     td {
       height: 40px;
-      line-height: 40px;
-      padding: 5px 10px;
+      line-height: 30px;
       overflow: hidden; 
          border-bottom: 1px solid #ddd;
          white-space: nowrap;  

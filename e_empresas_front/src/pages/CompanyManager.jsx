@@ -103,12 +103,12 @@ const CompanyManager = () => {
     };
 
     return (
-        <div className="company-manager">
+        <div className="company-manager col-12 col-md-8 col-lg-6 d-flex flex-wrap">
 
-            <section>
+            <section className='company-form-container col-12'>
                 <h2>{editId ? 'Editar Empresa' : 'Crear Nueva Empresa'}</h2>
 
-                <form onSubmit={handleSubmit} className="company-form">
+                <form onSubmit={handleSubmit} className="company-form d-flex flex-column d-sm-grid">
                     {[
                         { label: 'Nombre', name: 'name' },
                         { label: 'Manager', name: 'manager' },
@@ -171,13 +171,12 @@ const CompanyManager = () => {
                 
             </section>
 
-            <section className='companies'>
+            <section className='companies col-12'>
                 <h2>Empresas registradas</h2>
                 <table className="company-table">
                     <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th>Email</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -185,7 +184,6 @@ const CompanyManager = () => {
                         {companies.map(c => (
                             <tr key={c.id}>
                                 <td>{c.name}</td>
-                                <td>{c.email}</td>
                                 <td className='text-wrap'>
                                     <button className='edit' onClick={() => handleEdit(c)}>Editar</button>
                                     <button className='delete' onClick={() => handleDelete(c.id)}>Eliminar</button>

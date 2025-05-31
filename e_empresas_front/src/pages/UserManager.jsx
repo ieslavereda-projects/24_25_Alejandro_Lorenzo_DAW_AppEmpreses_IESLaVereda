@@ -68,13 +68,19 @@ const UserManager = () => {
             return;
         }
 
+        const payload = { ...form };
+        if (!payload.is_student) {
+            payload.nia = '';
+        }
+
         try {
             let response;
             if (editId) {
-                response = await axios.put(`/api/users/${editId}`, form);
+                response = await axios.put(`/api/users/${editId}`, payload);
             } else {
-                response = await axios.post('/api/users', form);
+                response = await axios.post('/api/users', payload);
             }
+
 
             setMessage(editId ? 'Usuario actualizado' : 'Usuario creado');
             setForm(initialForm);
@@ -119,12 +125,12 @@ const UserManager = () => {
     };
 
     return (
-        <div className="user-manager">
+        <div className="user-manager col-12 col-md-8 col-lg-6 d-flex flex-wrap">
 
-            <section>
+            <section className='container col-12 col-md-6'>
 
                 <section>
-                    <form onSubmit={handleSubmit} className="user-form">
+                    <form onSubmit={handleSubmit} className="user-form d-flex flex-column d-sm-grid">
                         <h2>{editId ? 'Editar Usuario' : 'Crear Nuevo Usuario'}</h2>
                         <span></span>
 
@@ -174,6 +180,7 @@ const UserManager = () => {
                                         name="is_admin"
                                         type="checkbox"
                                         checked={form.is_admin}
+                                        disabled={form.is_student}
                                         onChange={handleChange}
                                     /> Admin
                                 </label>
@@ -182,6 +189,7 @@ const UserManager = () => {
                                         name="is_tutor"
                                         type="checkbox"
                                         checked={form.is_tutor}
+                                        disabled={form.is_student}
                                         onChange={handleChange}
                                     /> Tutor
                                 </label>
@@ -190,6 +198,7 @@ const UserManager = () => {
                                         name="is_student"
                                         type="checkbox"
                                         checked={form.is_student}
+                                        disabled={form.is_admin || form.is_tutor}
                                         onChange={handleChange}
                                     /> Estudiante
                                 </label>
@@ -220,9 +229,11 @@ const UserManager = () => {
                                 id="nia"
                                 name="nia"
                                 type="number"
-                                value={form.nia}
+                                value={form.is_student ? form.nia : ''}
                                 onChange={handleChange}
+                                disabled={!form.is_student}
                             />
+
                             {errors.nia && <small className="error">{errors.nia[0]}</small>}
                         </div>
 
@@ -249,8 +260,16 @@ const UserManager = () => {
                                 <option value="">Seleccionar</option>
                                 <option value="masculino">Masculino</option>
                                 <option value="femenino">Femenino</option>
+                                <option value="no_binario">No binario</option>
+                                <option value="trans_masculino">Hombre trans</option>
+                                <option value="trans_femenino">Mujer trans</option>
+                                <option value="genero_fluido">Género fluido</option>
+                                <option value="agenero">Agénero</option>
+                                <option value="bigenero">Bigénero</option>
                                 <option value="otro">Otro</option>
+                                <option value="prefiero_no_decirlo">Prefiero no decirlo</option>
                             </select>
+
                             {errors.gender && <small className="error">{errors.gender[0]}</small>}
                         </div>
 
@@ -270,11 +289,11 @@ const UserManager = () => {
                 </section>
 
                 <section>
-                    <ImportTutorsForm/>
+                    <ImportTutorsForm />
                 </section>
             </section>
-
-            <section>
+            
+            <section className='container col-12 col-md-6'>
 
 
                 <h3>Usuarios Registrados</h3>
@@ -283,7 +302,6 @@ const UserManager = () => {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Email</th>
                                 <th>Roles</th>
                                 <th>Acciones</th>
                             </tr>
@@ -297,11 +315,10 @@ const UserManager = () => {
                                 return (
                                     <tr key={u.id}>
                                         <td>{u.name}</td>
-                                        <td>{u.email}</td>
                                         <td>{roles.join(', ')}</td>
                                         <td>
-                                            <button className='edit' onClick={() => handleEdit(u)}>Editar</button>
-                                            <button className='delete' onClick={() => handleDelete(u.id)}>Eliminar</button>
+                                            <button className='edit p-0' onClick={() => handleEdit(u)}>Editar</button>
+                                            <button className='delete p-0' onClick={() => handleDelete(u.id)}>Eliminar</button>
                                         </td>
                                     </tr>
                                 );
