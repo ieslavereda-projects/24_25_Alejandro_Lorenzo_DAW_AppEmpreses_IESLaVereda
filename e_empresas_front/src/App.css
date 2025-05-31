@@ -20,11 +20,11 @@ button:hover:not(:disabled) {
 }
 
 .edit {
-  color: #313f37;
-  background-color: #00f565;
+  color: black;
+  background-color: #d6d6d6;
 }
 
 .delete {
-  color: #ffedec;
-  background-color: #f51101;
+  color: black;
+  background-color: #adadad;
 }
