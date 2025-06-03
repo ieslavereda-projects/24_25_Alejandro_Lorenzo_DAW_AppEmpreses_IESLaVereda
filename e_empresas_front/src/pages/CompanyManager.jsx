@@ -108,7 +108,7 @@ const CompanyManager = () => {
             <section className='company-form-container col-12'>
                 <h2>{editId ? 'Editar Empresa' : 'Crear Nueva Empresa'}</h2>
 
-                <form onSubmit={handleSubmit} className="company-form d-flex flex-column d-sm-grid">
+                <form onSubmit={handleSubmit} className="company-form d-flex flex-column d-xl-grid">
                     {[
                         { label: 'Nombre', name: 'name' },
                         { label: 'Manager', name: 'manager' },

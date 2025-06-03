@@ -1,0 +1,63 @@
+.home-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-gap: 10px;
+  justify-content: center;
+  align-items: center;
+
+  .title {
+    grid-column: span 2;
+    text-align: center;
+    align-self: end;
+  }
+
+  .container {
+    text-decoration: none;
+    padding: 20px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    span {
+      font-weight: 600;
+      color: #333;
+    }
+
+    .icon {
+      width: 50px;
+      height: 50px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &-users {
+        background-image: url("../../public/img/icons/gestionusuarios.png");
+      }
+
+      &-user {
+        background-image: url("../../public/img/icons/usuario.png");
+      }
+
+      &-comp {
+        background-image: url("../../public/img/icons/empresa.png");
+      }
+
+      &-excel {
+        background-image: url("../../public/img/icons/excel.png");
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, 1fr);
+
+    .title {
+      grid-column: span 1;
+    }
+  }
+}

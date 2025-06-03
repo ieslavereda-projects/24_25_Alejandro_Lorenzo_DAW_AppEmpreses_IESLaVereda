@@ -15,60 +15,70 @@ import ImportCompanies from "./components/ImportCompanies";
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
+      {
+        <div className="d-flex general">
+          <Navbar />
+          <div className="contenido-principal">
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
 
-        <Route path="/companies" element={<CompaniesList />} />
-        <Route path="/companies/:id" element={<CompanyDetail />} />
+              <Route path="/companies" element={<CompaniesList />} />
+              <Route path="/companies/:id" element={<CompanyDetail />} />
 
-        <Route
-          path="/user-menu"
-          element={
-            <ProtectedRoute
-              requiredRoles={["admin"]}
-              element={<UserManager />}
-            />
-          }
-        />
+              <Route
+                path="/user-menu"
+                element={
+                  <ProtectedRoute
+                    requiredRoles={["admin"]}
+                    element={<UserManager />}
+                  />
+                }
+              />
 
-        <Route
-          path="/company-menu"
-          element={
-            <ProtectedRoute
-              requiredRoles={["admin"]}
-              element={<CompanyManager />}
-            />
-          }
-        />
+              <Route
+                path="/company-menu"
+                element={
+                  <ProtectedRoute
+                    requiredRoles={["admin"]}
+                    element={<CompanyManager />}
+                  />
+                }
+              />
 
-        <Route
-          path="/import-tutors"
-          element={
-            <ProtectedRoute
-              requiredRoles={["admin", "tutor"]}
-              element={
-                <>
-                  <ImportTutorsForm />
-                  <ImportCompanies />
-                </>
-              }
-            />
-          }
-        />
+              <Route
+                path="/import-tutors"
+                element={
+                  <ProtectedRoute
+                    requiredRoles={["admin", "tutor"]}
+                    element={
+                      <>
+                        {
+                          <div className="col-12 d-flex flex-wrap gap-5 container-fluid justify-content-center pt-5">
+                            <ImportTutorsForm />
+                            <ImportCompanies />
+                          </div>
+                        }
+                      </>
+                    }
+                  />
+                }
+              />
 
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRoute
-              requiredRoles={["admin", "tutor"]}
-              element={<Profile />}
-            />
-          }
-        />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute
+                    requiredRoles={["admin", "tutor"]}
+                    element={<Profile />}
+                  />
+                }
+              />
 
-        <Route path="/" element={<Home />} />
-      </Routes>
+              <Route path="/" element={<Home />} />
+            </Routes>
+          </div>
+        </div>
+      }
     </Router>
   );
 }

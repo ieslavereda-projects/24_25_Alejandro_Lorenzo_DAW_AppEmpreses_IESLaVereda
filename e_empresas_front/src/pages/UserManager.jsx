@@ -125,15 +125,14 @@ const UserManager = () => {
     };
 
     return (
-        <div className="user-manager col-12 col-md-8 col-lg-6 d-flex flex-wrap">
+        <div className="user-manager col-12 col-md-10 d-flex flex-wrap">
 
-            <section className='container col-12 col-md-6'>
+            <section className='container col-12'>
 
                 <section>
-                    <form onSubmit={handleSubmit} className="user-form d-flex flex-column d-sm-grid">
-                        <h2>{editId ? 'Editar Usuario' : 'Crear Nuevo Usuario'}</h2>
-                        <span></span>
+                <h2>{editId ? 'Editar Usuario' : 'Crear Nuevo Usuario'}</h2>
 
+                    <form onSubmit={handleSubmit} className="user-form d-flex flex-column d-sm-grid">
                         <div className="form-group">
                             <label htmlFor="name">Nombre</label>
                             <input

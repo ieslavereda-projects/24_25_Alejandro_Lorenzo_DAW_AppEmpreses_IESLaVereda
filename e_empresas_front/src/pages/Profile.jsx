@@ -104,8 +104,8 @@ const MyProfile = () => {
 
     return (
         <div className="container py-4">
-            <h2>Mi Perfil</h2>
-            <div className="card mb-4">
+            <h2>Mi Zona</h2>
+            <div className="card mb-4 z-n1">
                 <div className="card-body">
                     <p><strong>Nombre:</strong> {user.name}</p>
                     <p><strong>Email:</strong> {user.email}</p>

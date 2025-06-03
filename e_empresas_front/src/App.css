@@ -1,3 +1,9 @@
+@media (max-width: 900px) {
+  .general {
+    flex-direction: column;
+  }
+}
+
 button {
   padding: 10px 15px 10px 15px;
   margin: 2px !important;
@@ -9,7 +15,7 @@ button {
 }
 
 /* Esto es para que la X de quitar usuarios en la lista de tareas no tenga los hover de boton */
-.badge>button:hover{
+.badge > button:hover {
   transform: none !important;
   box-shadow: none !important;
 }
@@ -27,4 +33,33 @@ button:hover:not(:disabled) {
 .delete {
   color: black;
   background-color: #adadad;
+}
+
+.general {
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
+.contenido-principal {
+  margin-left: 500px;
+  width: calc(100% - 400px);
+  padding: 1rem;
+}
+
+@media (max-width: 900px) {
+  .navbar {
+    width: 100vw;
+    left: -100%;
+    transition: left 0.3s ease-in-out;
+  }
+
+  .navbar.active {
+    left: 0;
+  }
+
+  .contenido-principal {
+    margin-left: 0;
+    margin-top: 80px;
+    width: 100%;
+  }
 }

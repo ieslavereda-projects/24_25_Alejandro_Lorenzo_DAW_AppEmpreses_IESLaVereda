@@ -82,7 +82,7 @@ const ImportTutorsForm = () => {
   return (
     <div className="import-form-container">
       <form id="fileForm" onSubmit={handleSubmit}>
-        <h2>Importar Tutores Desde Excel</h2>
+        <h2 className='text-wrap'>Importar Tutores</h2>
 
         <div className="form-group">
           <input
