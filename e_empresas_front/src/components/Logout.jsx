@@ -1,4 +1,5 @@
 import axios from 'axios';
+import '../styles/Navbar.scss'
 
 const LogoutButton = () => {
 
@@ -21,8 +22,8 @@ const LogoutButton = () => {
 
 
   return (
-    <button onClick={handleLogout} className='align-self-start text-center'>
-      Cerrar sesión
+    <button title='Cerrar Sesión' onClick={handleLogout} className='align-self-start text-center bg-dark navbar__link p-0'>
+      <div className="icon icon-logout"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Cerrar sesión</div>
     </button>
   );
 }

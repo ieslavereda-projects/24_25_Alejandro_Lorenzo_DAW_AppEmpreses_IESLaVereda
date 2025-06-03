@@ -29,9 +29,9 @@ const CompaniesList = () => {
       />
       <ul>
         {filtered.map(c => (
-          <li key={c.id}>
+          <li key={c.id} className='shadow-sm p-3'>
             <Link to={`/companies/${c.id}`}>
-              {c.name}
+              <div className='fw-bold'>{c.name}</div>
             </Link>
           </li>
         ))}
