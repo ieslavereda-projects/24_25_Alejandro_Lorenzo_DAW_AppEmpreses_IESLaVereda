@@ -21,9 +21,6 @@ const CompanyDetail = () => {
         title: '',
         comment: '',
         rating: 3,
-        work_environment: 3,
-        mentoring: 3,
-        learning_value: 3,
         would_recommend: true,
     });
 
@@ -93,12 +90,8 @@ const CompanyDetail = () => {
                     [newReview, ...prev.filter(r => r.id !== newReview.id)]
                 );
                 setForm({
-                    title: '',
                     comment: '',
                     rating: 1,
-                    work_environment: 1,
-                    mentoring: 1,
-                    learning_value: 1,
                     would_recommend: true,
                 });
             })
@@ -182,19 +175,11 @@ const CompanyDetail = () => {
     return (
         <div className="company-detail">
             <h2>{company.name}</h2>
-            <p><strong>Cursos destacados:</strong> {company.industry}</p>
             <hr />
 
             <section className="new-review">
                 <h3>Añade un comentario</h3>
-                <form onSubmit={handleSubmit}>
-                    <input
-                        name="title"
-                        value={form.title}
-                        onChange={handleChange}
-                        placeholder="Título"
-                        required
-                    />
+                <form onSubmit={handleSubmit} className='d-flex flex-column'>
                     <textarea
                         name="comment"
                         value={form.comment}
@@ -205,9 +190,7 @@ const CompanyDetail = () => {
 
                     {[
                         { field: 'rating', label: 'Puntuación general' },
-                        { field: 'work_environment', label: 'Entorno laboral' },
-                        { field: 'mentoring', label: 'Mentoría' },
-                        { field: 'learning_value', label: 'Valor de aprendizaje' }
+
                     ].map(({ field, label }) => (
                         <div key={field}>
                             <label>{label}:</label>
@@ -257,11 +240,11 @@ const CompanyDetail = () => {
                             required
                         />
                         <section>
-                            <button type="submit">
+                            <button type="submit" className='w-100'>
                                 {editingId ? 'Actualizar' : 'Publicar'}
                             </button>
                             {editingId && (
-                                <button type="button" className='bg-danger' onClick={() => {
+                                <button type="button" className='bg-danger w-100' onClick={() => {
                                     setEditingId(null);
                                     setTutorForm({ comment: '' });
                                 }}>
@@ -304,18 +287,13 @@ const CompanyDetail = () => {
                 ) : (
                     orderedReviews.map(r => (
                         <div key={r.id} className="review-card shadow-sm rounded-4 p-3">
-                            <section className='review-card-title'>
-                                <h4>{r.title}</h4>
+                            <section className='review-card-title d-flex justify-content-between align-items-start'>
+                                <p className='text-break fs-5'>{r.comment}</p>
                                 <small>{new Date(r.created_at).toLocaleDateString()}</small>
                             </section>
-                            <section className='review-card-comment'>
-                                <p className='text-break'>{r.comment}</p>
-                            </section>
-                            <section className='review-card-ratings'>
-                                <p>Puntuación general: <StarRating value={r.rating} /></p>
-                                <p>Entorno de trabajo: <StarRating value={r.work_environment} /></p>
-                                <p>Mentoring: <StarRating value={r.mentoring} /></p>
-                                <p>Aprendizaje: <StarRating value={r.learning_value} /></p>
+         
+                            <section className='review-card-ratings flex-column'>
+                                <StarRating value={r.rating} />
                                 <p>Recomendaría: {r.would_recommend ? 'Sí' : 'No'}</p>
                             </section>
 

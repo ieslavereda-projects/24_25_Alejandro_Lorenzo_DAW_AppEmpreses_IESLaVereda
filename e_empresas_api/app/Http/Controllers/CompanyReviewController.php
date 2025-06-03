@@ -6,18 +6,15 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\CompanyReview;
+use Illuminate\Database\QueryException;
 
 class CompanyReviewController extends Controller
 {
     public function store(Request $request, Company $company)
     {
         $validated = $request->validate([
-            'title'             => 'required|string|max:255',
             'comment'           => 'required|string',
             'rating'            => 'required|integer|min:1|max:5',
-            'work_environment'  => 'required|integer|min:1|max:5',
-            'mentoring'         => 'required|integer|min:1|max:5',
-            'learning_value'    => 'required|integer|min:1|max:5',
             'would_recommend'   => 'required|boolean',
             'id_student'        => 'nullable|exists:users,id',
         ]);
@@ -34,13 +31,19 @@ class CompanyReviewController extends Controller
             $review->save();
 
             return response()->json($review, 201);
+        } catch (QueryException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                return response()->json([
+                    'message' => 'Solo puedes añadir un comentario en una empresa.'
+                ], 409); 
+            }
         } catch (\Exception $e) {
             Log::error("Error al crear o actualizar review para Company ID={$company->id}: " . $e->getMessage(), [
                 'stack' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
-                'message' => 'Error interno al guardar el comentario.',
+                'message' => $e->getMessage(),
                 'error'   => $e->getMessage()
             ], 500);
         }
