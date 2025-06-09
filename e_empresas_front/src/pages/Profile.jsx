@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 
 const MyProfile = () => {
-    const token = localStorage.getItem('authToken');
+    const [token] = useState(() => localStorage.getItem('authToken'));
     const userId = parseInt(localStorage.getItem('userId'), 10);
 
     const [user, setUser] = useState(null);
@@ -13,6 +13,8 @@ const MyProfile = () => {
     const [editingId, setEditingId] = useState(null);
     const [editText, setEditText] = useState('');
     const [error, setError] = useState('');
+    const [reviewPage, setReviewPage] = useState(1);
+    const [reviewData, setReviewData] = useState({ data: [], last_page: 1 });
 
     useEffect(() => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
@@ -20,6 +22,13 @@ const MyProfile = () => {
         axios.get('/api/users?tutor=1').then(r => setTutors(r.data));
         axios.get('/api/notices').then(r => setNotices(r.data));
     }, [token]);
+
+    useEffect(() => {
+        axios.get(`/api/reviews?page=${reviewPage}`).then(r => setReviewData(r.data));
+    }, [token, reviewPage]);
+
+    const allReviews = reviewData.data || [];
+    const pendingReviews = allReviews.filter(r => !r.approved);
 
     const sent = useMemo(
         () => notices.filter(n => n.id_user_emitter === userId),
@@ -100,6 +109,25 @@ const MyProfile = () => {
             .catch(() => alert('No se pudo guardar cambios'));
     };
 
+    const fetchReviews = (page = 1) => {
+        axios.get(`/api/reviews?page=${page}`)
+            .then(r => setReviewData(r.data))
+            .catch(() => alert('Error al cargar comentarios'));
+    };
+        
+    const approveReview = id => {
+        axios.put(`/api/reviews/${id}`, { approved: 1 })
+            .then(() => fetchReviews(reviewPage))
+            .catch(() => alert('Error al aprobar el comentario'));
+    };
+    
+    const deleteReview = id => {
+        if (!window.confirm('¿Eliminar este comentario?')) return;
+        axios.delete(`/api/reviews/${id}`)
+            .then(() => fetchReviews(reviewPage))
+            .catch(() => alert('Error al eliminar'));
+    };
+    
     if (!user) return <p>Cargando perfil…</p>;
 
     return (
@@ -211,6 +239,38 @@ const MyProfile = () => {
                     ))}
                 </div>
             </div>
+
+            {user.is_admin && (() => {
+                const pendingReviews = allReviews.filter(r => !r.approved);
+
+                return (
+                    <div className="col-md-6">
+                        <h4>Comentarios por aprobar</h4>
+                        {pendingReviews.length === 0 ? (
+                            <p>No hay comentarios pendientes.</p>
+                        ) : pendingReviews.map(r => (
+                            <div key={r.id} className="card mb-2">
+                                <div className="card-body">
+                                    <p><strong>{r.user?.name || 'Usuario'}:</strong> {r.comment}</p>
+                                    <p><strong>Puntuación:</strong> {r.rating}</p>
+                                    <div>
+                                        <button className="btn btn-sm btn-success me-2" onClick={() => approveReview(r.id)}>
+                                            Aprobar
+                                        </button>
+                                        <button className="btn btn-sm btn-danger" onClick={() => deleteReview(r.id)}>
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                );
+            })()}
+
+
+
+
         </div>
     );
 };
