@@ -10,6 +10,25 @@ use Illuminate\Database\QueryException;
 
 class CompanyReviewController extends Controller
 {
+    public function allReviews(Request $request)
+    {
+        $reviews = CompanyReview::with(['company', 'user'])
+            ->where('approved', 0)
+            ->orderByDesc('created_at')
+            ->paginate(10);
+
+        return response()->json($reviews);
+    }
+
+    public function approve($id)
+    {
+        $review = CompanyReview::findOrFail($id);
+        $review->approved = true;
+        $review->save();
+
+        return response()->json($review);
+    }
+
     public function store(Request $request, Company $company)
     {
         $validated = $request->validate([
@@ -18,6 +37,7 @@ class CompanyReviewController extends Controller
             'would_recommend'   => 'required|boolean',
             'id_student'        => 'nullable|exists:users,id',
         ]);
+        $validated['approved'] = false;
 
         try {
             $studentId = $request->id_student;
@@ -35,7 +55,7 @@ class CompanyReviewController extends Controller
             if ($e->errorInfo[1] == 1062) {
                 return response()->json([
                     'message' => 'Solo puedes añadir un comentario en una empresa.'
-                ], 409); 
+                ], 409);
             }
         } catch (\Exception $e) {
             Log::error("Error al crear o actualizar review para Company ID={$company->id}: " . $e->getMessage(), [

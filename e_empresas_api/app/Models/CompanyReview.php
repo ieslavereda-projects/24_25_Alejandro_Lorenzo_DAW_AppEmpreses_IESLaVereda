@@ -8,14 +8,21 @@ class CompanyReview extends Model
 {
     protected $table = "company_reviews";
     protected $fillable = [
-        'id_company', 'id_student', 'title', 'comment',
-        'rating', 'work_environment', 'mentoring',
-        'learning_value', 'would_recommend'
+        'comment',
+        'rating',
+        'would_recommend',
+        'id_student',
+        'approved', 
     ];
+    
 
     public function company() {
         return $this->belongsTo(Company::class, 'id_company');
     }
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
 
     public function student() {
         return $this->belongsTo(User::class, 'id_student');

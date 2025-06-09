@@ -62,6 +62,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::get('/companies/{company}/reviews', [CompanyReviewController::class, 'index']);
 Route::post('/companies/{company}/reviews', [CompanyReviewController::class, 'store']);
 Route::delete('/companies/{company}/reviews/{review}', [CompanyReviewController::class, 'destroy']);
+Route::get('/reviews', [CompanyReviewController::class, 'allReviews']);
+Route::put('/reviews/{id}', [CompanyReviewController::class, 'approve']);
 
 Route::middleware('auth:sanctum')->group(function(){
     Route::get('/notices', [NoticeController::class, 'index']);
