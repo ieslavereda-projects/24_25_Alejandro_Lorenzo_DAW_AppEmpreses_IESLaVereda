@@ -11,6 +11,7 @@ import CompanyDetail from "./components/CompanyDetail";
 import ImportTutorsForm from "./components/ImportTutorsForm";
 import Profile from "./pages/Profile";
 import ImportCompanies from "./components/ImportCompanies";
+import ScrollToTopButton from "./components/ScrollToTopButton";
 
 function App() {
   return (
@@ -76,6 +77,8 @@ function App() {
 
               <Route path="/" element={<Home />} />
             </Routes>
+            <ScrollToTopButton />
+
           </div>
         </div>
       }
