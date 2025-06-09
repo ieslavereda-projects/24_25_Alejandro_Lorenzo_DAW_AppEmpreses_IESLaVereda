@@ -18,7 +18,7 @@ const CompaniesList = () => {
   );
 
   return (
-    <div className="companies-list">
+    <div className="companies-list col-12 col-md-10">
       <h2>Empresas</h2>
       <input
         type="text"

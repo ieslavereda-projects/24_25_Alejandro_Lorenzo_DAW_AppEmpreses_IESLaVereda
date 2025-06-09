@@ -5,7 +5,8 @@ html {
 }
 
 .form-container {
-  height: calc(100vh - 70px); // los 70px son el alto del navbar
+  transform: translateX(-200px);
+  height: calc(100vh - 70px); 
   display: flex;
   justify-content: center; 
   align-items: center; 

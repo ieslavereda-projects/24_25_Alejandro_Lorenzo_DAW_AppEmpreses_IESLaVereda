@@ -16,7 +16,7 @@
     text-decoration: none;
     padding: 20px;
     border: 2px solid #ccc;
-    border-radius: 10px;
+    border-radius: 5px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -33,6 +33,7 @@
       background-size: cover;
       background-repeat: no-repeat;
       background-position: center;
+      transition: all 0.3s;
 
       &-users {
         background-image: url("../../public/img/icons/gestionusuarios.png");
@@ -48,6 +49,14 @@
 
       &-excel {
         background-image: url("../../public/img/icons/excel.png");
+      }
+    }
+    transition: all 0.3s;
+    &:hover {
+      background-color: #f5f5f5;
+      border-color: #999;
+      .icon {
+        transform: scale(1.1);
       }
     }
   }

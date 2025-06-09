@@ -103,7 +103,7 @@ const CompanyManager = () => {
     };
 
     return (
-        <div className="company-manager col-12 col-md-8 col-lg-6 d-flex flex-wrap">
+        <div className="company-manager col-12 col-md-10 d-flex flex-wrap">
 
             <section className='company-form-container col-12'>
                 <h2>{editId ? 'Editar Empresa' : 'Crear Nueva Empresa'}</h2>
