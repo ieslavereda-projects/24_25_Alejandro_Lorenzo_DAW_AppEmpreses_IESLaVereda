@@ -23,60 +23,67 @@ const Navbar = () => {
   const isLoggedIn = !!user;
 
   return (
-    <nav className="navbar bg-dark p-3">
-      <div className="navbar__logo d-flex align-items-center gap-3"><div className="logo"></div>E_EMPRESAS</div>
+    <>
+      {isLoggedIn && (
+        <nav className="navbar bg-dark p-3">
+          <div className="navbar__logo d-flex align-items-center gap-3"><div className="logo"></div>E_EMPRESAS</div>
 
-      <div
-        className="navbar__toggle"
-        onClick={() => setIsMenuOpen((prev) => !prev)}
-      >
-        ☰
-      </div>
+          <div
+            className="navbar__toggle"
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+          >
+            ☰
+          </div>
 
-      <div className={`navbar__links ${isMenuOpen ? "active" : ""}`}>
+          <div className={`navbar__links ${isMenuOpen ? "active" : ""}`}>
 
-        {!isLoggedIn && (
-          <Link title="Iniciar sesión" to="/login">
-            <button>Iniciar Sesión</button>
-          </Link>
-        )}
-
-        {isLoggedIn && (
-          <>
-            <Link title="Inicio" to="/" className="navbar__link">
-              <div className="icon icon-home"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Inicio</div>
-            </Link>
-            {user.is_admin && (
-              <>
-                <Link title="Gestionar Usuarios" to="/user-menu" className="navbar__link">
-                  <div className="icon icon-user"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Gestionar Usuarios</div>
-                </Link>
-                <Link title="Gestionar Empresas" to="/company-menu" className="navbar__link">
-                  <div className="icon icon-comp"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Gestionar Empresas</div>
-                </Link>
-              </>
+            {!isLoggedIn && (
+              <Link title="Iniciar sesión" to="/login">
+                <button>Iniciar Sesión</button>
+              </Link>
             )}
 
-            {user.is_tutor && (
+            {isLoggedIn && (
               <>
-                <Link title="Importar usuarios o empresas con excel" to="/import-tutors" className="navbar__link">
-                  <div className="icon icon-import"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Importar por Excel</div>
+                <Link title="Inicio" to="/" className="navbar__link">
+                  <div className="icon icon-home"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Inicio</div>
                 </Link>
-                <Link title="Mi zona" to="/profile" className="navbar__link">
-                  <div className="icon icon-profile"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Mi zona</div>
+                {user.is_admin && (
+                  <>
+                    <Link title="Gestionar Usuarios" to="/user-menu" className="navbar__link">
+                      <div className="icon icon-user"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Gestionar Usuarios</div>
+                    </Link>
+                    <Link title="Gestionar Empresas" to="/company-menu" className="navbar__link">
+                      <div className="icon icon-comp"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Gestionar Empresas</div>
+                    </Link>
+                  </>
+                )}
+
+                {user.is_tutor && (
+                  <>
+                    <Link title="Importar usuarios o empresas con excel" to="/import-tutors" className="navbar__link">
+                      <div className="icon icon-import"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Importar por Excel</div>
+                    </Link>
+                    <Link title="Mi zona" to="/profile" className="navbar__link">
+                      <div className="icon icon-profile"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Mi zona</div>
+                    </Link>
+                  </>
+                )}
+
+                <Link title="Ver empresas" to="/companies" className="navbar__link">
+                  <div className="icon icon-comp"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Empresas</div>
                 </Link>
+
+                <LogoutButton />
               </>
             )}
+          </div>
+        </nav>
+      )}
 
-            <Link title="Ver empresas" to="/companies" className="navbar__link">
-              <div className="icon icon-comp"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Empresas</div>
-            </Link>
 
-            <LogoutButton />
-          </>
-        )}
-      </div>
-    </nav>
+    </>
+
   );
 };
 
