@@ -32,9 +32,16 @@ const Home = () => {
         }
         {isLoggedIn &&
           <>
-            <div className="title text-center">
-              <h1>Bienvenido, {user.name}</h1>
-            </div>
+            {user.name ? (
+              <div className="title text-center">
+                <h1 className="text-truncate">Bienvenido, {user.name}</h1>
+              </div>
+            ) : (
+              <div className="title text-center">
+                <p className="text-truncate">Cargando...</p>
+              </div>
+            )}
+
 
             {user.is_admin && (
               <>
@@ -62,14 +69,11 @@ const Home = () => {
               </>
             )}
 
-            {user.is_student && (
-              <>
-                <Link to="/companies" className="container title" >
-                  <div className="icon icon-comp"></div>
-                  <span>Ver empresas</span>
-                </Link>
-              </>
-
+            {(user.is_student || user.is_tutor) && (
+              <Link to="/companies" className="container title">
+                <div className="icon icon-comp"></div>
+                <span>Ver empresas</span>
+              </Link>
             )}
           </>
         }
