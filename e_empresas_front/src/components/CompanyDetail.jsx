@@ -18,7 +18,6 @@ const CompanyDetail = () => {
     const [tutorComments, setTutorComments] = useState([]);
 
     const [form, setForm] = useState({
-        title: '',
         comment: '',
         rating: 3,
         would_recommend: true,
@@ -80,7 +79,13 @@ const CompanyDetail = () => {
 
     const handleSubmit = e => {
         e.preventDefault();
-        const payload = { ...form, id_student: userId };
+        const { comment, rating, would_recommend } = form;
+        const payload = {
+            comment,
+            rating,
+            would_recommend,
+            id_student: userId,
+        };
 
         axios.post(`/api/companies/${id}/reviews`, payload, {
             headers: { Authorization: `Bearer ${token}` }
@@ -103,10 +108,9 @@ const CompanyDetail = () => {
     };
 
     const orderedReviews = useMemo(() => {
-        const own = reviews.find(r => r.id_student === userId);
-        if (!own) return reviews;
-        const others = reviews.filter(r => r.id !== own.id);
-        return [own, ...others];
+        return reviews.filter(r =>
+            r.approved || r.id_student === userId
+        );
     }, [reviews, userId]);
 
     const handleDelete = reviewId => {
@@ -169,12 +173,89 @@ const CompanyDetail = () => {
         setEditingId(comment.id);
     };
 
+    const averageRating = useMemo(() => {
+        const approvedReviews = reviews.filter(r => r.approved);
+        if (approvedReviews.length === 0) return null;
+        const total = approvedReviews.reduce((sum, r) => sum + r.rating, 0);
+        return (total / approvedReviews.length).toFixed(1);
+    }, [reviews]);
 
     if (!company) return <p>Cargando...</p>;
 
     return (
-        <div className="company-detail">
+        <div className="company-detail col-12 col-lg-10">
             <h2>{company.name}</h2>
+            {averageRating && (
+                <div className="company-average-rating">
+                    <strong>Puntuación media:</strong>
+                    <StarRating value={averageRating} />
+                    {averageRating} / 5
+                </div>
+            )}
+
+            {isTutor && (
+                <>
+                    <section title='Solo visible para tutores' className=''>
+                        <hr />
+                        <h5>Datos de la empresa:</h5>
+                        <div><strong>Jefe: </strong>{company.manager}</div>
+                        <div><strong>Teléfono: </strong>{company.phone}</div>
+                        <div><strong>Correo: </strong>{company.email}</div>
+                        <div><strong>Privada: </strong>{company.is_private == 1 ? "SÍ" : "NO"}</div>
+                    </section>
+                    <hr />
+                    <section className="tutor-comments new-review">
+                        <div className="d-flex justify-content-between">
+                            <h3>Comentarios de tutores</h3>
+                            <div className="rounded p-2" title='Aquí puede añadirse infomación sobre la aceptación de prácticas'>?</div>
+                        </div>
+                        <form onSubmit={handleTutorSubmit} className='d-flex flex-column'>
+                            <textarea
+                                className='form-control'
+                                value={tutorForm.comment}
+                                onChange={handleTutorChange}
+                                placeholder="Escribe tu comentario como tutor"
+                                required
+                            />
+                            <section>
+                                <button type="submit" className='w-100'>
+                                    {editingId ? 'Actualizar' : 'Publicar'}
+                                </button>
+                                {editingId && (
+                                    <button type="button" className='bg-danger w-100' onClick={() => {
+                                        setEditingId(null);
+                                        setTutorForm({ comment: '' });
+                                    }}>
+                                        Cancelar
+                                    </button>
+                                )}
+                            </section>
+
+                        </form>
+
+                        {tutorComments.length === 0 ? (
+                            <p>No hay comentarios de tutores aún.</p>
+                        ) : (
+                            tutorComments.map(c => (
+                                <div key={c.id} className="review-card shadow-sm rounded-4 p-3">
+                                    <p className='text-break'>{c.comment}</p>
+                                    <small>{new Date(c.created_at).toLocaleDateString()}</small>
+
+                                    {(c.id_tutor === userId || isAdmin) && (
+                                        <div className="mt-2">
+                                            {c.id_tutor === userId && (
+                                                <button onClick={() => handleTutorEdit(c)}>Editar</button>
+                                            )}
+                                            <button onClick={() => handleTutorDelete(c.id)}>Eliminar</button>
+                                        </div>
+                                    )}
+
+                                </div>
+                            ))
+                        )}
+                    </section>
+                </>
+            )}
             <hr />
 
             <section className="new-review">
@@ -184,7 +265,7 @@ const CompanyDetail = () => {
                         name="comment"
                         value={form.comment}
                         onChange={handleChange}
-                        placeholder="Tu comentario..."
+                        placeholder="¿Cómo ha sido tu experiencia?"
                         required
                     />
 
@@ -228,56 +309,7 @@ const CompanyDetail = () => {
                     <button type="submit" className='bg-primary w-100'>Enviar</button>
                 </form>
             </section>
-            {isTutor && (
-                <section className="tutor-comments new-review">
-                    <h3>Comentarios de tutores</h3>
-                    <form onSubmit={handleTutorSubmit} className='d-flex flex-column'>
-                        <textarea
-                            className='form-control'
-                            value={tutorForm.comment}
-                            onChange={handleTutorChange}
-                            placeholder="Escribe tu comentario como tutor"
-                            required
-                        />
-                        <section>
-                            <button type="submit" className='w-100'>
-                                {editingId ? 'Actualizar' : 'Publicar'}
-                            </button>
-                            {editingId && (
-                                <button type="button" className='bg-danger w-100' onClick={() => {
-                                    setEditingId(null);
-                                    setTutorForm({ comment: '' });
-                                }}>
-                                    Cancelar
-                                </button>
-                            )}
-                        </section>
 
-                    </form>
-
-                    <hr />
-                    {tutorComments.length === 0 ? (
-                        <p>No hay comentarios de tutores aún.</p>
-                    ) : (
-                        tutorComments.map(c => (
-                            <div key={c.id} className="review-card shadow-sm rounded-4 p-3">
-                                <p className='text-break'>{c.comment}</p>
-                                <small>{new Date(c.created_at).toLocaleDateString()}</small>
-
-                                {(c.id_tutor === userId || isAdmin) && (
-                                    <div className="mt-2">
-                                        {c.id_tutor === userId && (
-                                            <button onClick={() => handleTutorEdit(c)}>Editar</button>
-                                        )}
-                                        <button onClick={() => handleTutorDelete(c.id)}>Eliminar</button>
-                                    </div>
-                                )}
-
-                            </div>
-                        ))
-                    )}
-                </section>
-            )}
 
             <section className="reviews">
                 <h3>Comentarios</h3>
@@ -291,22 +323,23 @@ const CompanyDetail = () => {
                                 <p className='text-break fs-5'>{r.comment}</p>
                                 <small>{new Date(r.created_at).toLocaleDateString()}</small>
                             </section>
-         
+
                             <section className='review-card-ratings flex-column'>
                                 <StarRating value={r.rating} />
                                 <p>Recomendaría: {r.would_recommend ? 'Sí' : 'No'}</p>
                             </section>
 
-                            {r.id_student === userId && (
+                            {(r.id_student === userId || isAdmin) && (
                                 <section className='review-card-delete'>
                                     <button
                                         onClick={() => handleDelete(r.id)}
                                         className="btn-delete-review"
                                     >
-                                        Eliminar mi comentario
+                                        Eliminar comentario
                                     </button>
                                 </section>
                             )}
+
                         </div>
                     ))
                 )}
