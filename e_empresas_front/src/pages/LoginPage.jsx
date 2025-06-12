@@ -31,6 +31,7 @@ const LoginPage = () => {
 
   return (
       <div className="form-container">
+        <h3>E-EMPRESAS</h3>
         <form onSubmit={handleLogin}>
           <h3 className='text-start'> Iniciar sesión </h3>
 

@@ -84,7 +84,7 @@ const ImportTutorsForm = () => {
       <form id="fileForm" onSubmit={handleSubmit}>
         <h2 className='text-wrap'>Importar Tutores</h2>
 
-        <div className="form-group">
+        <div className="form-group text-truncate">
           <input
             type="file"
             id="file"
