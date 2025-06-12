@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 20-05-2025 a las 16:32:35
+-- Tiempo de generación: 12-06-2025 a las 20:47:07
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.0.30
 
@@ -53,7 +53,6 @@ CREATE TABLE `companies` (
   `email` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
-  `industry` varchar(255) DEFAULT NULL,
   `observations` varchar(255) DEFAULT NULL,
   `is_private` tinyint(4) DEFAULT NULL,
   `allows_erasmus` tinyint(1) DEFAULT NULL,
@@ -65,8 +64,8 @@ CREATE TABLE `companies` (
 -- Volcado de datos para la tabla `companies`
 --
 
-INSERT INTO `companies` (`id`, `name`, `manager`, `phone`, `email`, `address`, `website`, `industry`, `observations`, `is_private`, `allows_erasmus`, `created_at`, `updated_at`) VALUES
-(199, 'Empresa de prubea', 'Manager', '123456789', 'eprueba@gmail.com', 'Empresa de prubea', 'http://prueba', 'DAW', NULL, NULL, 1, '2025-05-20 12:31:33', '2025-05-20 12:31:33');
+INSERT INTO `companies` (`id`, `name`, `manager`, `phone`, `email`, `address`, `website`, `observations`, `is_private`, `allows_erasmus`, `created_at`, `updated_at`) VALUES
+(199, 'Empresa de prueba', 'Manager', '123456789', 'eprueba@gmail.com', 'Empresa de prubea', 'http://prueba', NULL, NULL, 1, '2025-05-20 12:31:33', '2025-06-02 10:03:30');
 
 -- --------------------------------------------------------
 
@@ -99,7 +98,7 @@ CREATE TABLE `company_register_request` (
   `email` varchar(255) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `website` varchar(255) DEFAULT NULL,
-  `industry` varchar(255) DEFAULT NULL,
+  `is_private` tinyint(1) DEFAULT NULL,
   `allows_erasmus` tinyint(1) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
@@ -115,13 +114,10 @@ CREATE TABLE `company_reviews` (
   `id` int(11) NOT NULL,
   `id_company` int(11) NOT NULL,
   `id_student` int(11) NOT NULL,
-  `title` varchar(100) DEFAULT NULL,
   `comment` text NOT NULL,
   `rating` int(1) NOT NULL,
-  `work_environment` int(1) DEFAULT NULL,
-  `mentoring` int(1) DEFAULT NULL,
-  `learning_value` int(1) DEFAULT NULL,
   `would_recommend` tinyint(1) DEFAULT NULL,
+  `approved` tinyint(1) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -228,6 +224,7 @@ CREATE TABLE `users` (
   `nia` int(11) DEFAULT NULL,
   `nif` varchar(20) DEFAULT NULL,
   `gender` varchar(20) DEFAULT NULL,
+  `id_company` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -236,10 +233,10 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`, `is_admin`, `is_student`, `is_tutor`, `study_cycle`, `nia`, `nif`, `gender`, `created_at`, `updated_at`) VALUES
-(58, 'admin', 'admin@admin.com', '$2y$10$zqfYMytw3GMxOp6tG3zUquiXVFeV7bozhfLNGCQQf/PJ3y8t4sbfW', 1, 1, 1, 'DAW', 10477149, '23232323R', 'masculino', '2025-05-14 16:13:50', '2025-05-14 16:14:12'),
-(67, 'tutor', 'tutor@admin.com', '$2y$10$vAsYWKojYk8oc6Swf7oBC.y.jFzXPJRECxMK02jSfVYqBDqukMqfu', 0, 0, 1, 'DAM', 21213132, '312231e', 'masculino', '2025-05-15 11:47:51', '2025-05-15 11:47:51'),
-(70, 'usuario', 'usuario@admin.com', '$2y$10$pMUsA.cls3vTtCtNEeTbEOseMEa54jAlz8osqOkVy6ywJGS89UH9a', 0, 1, 0, 'DAW', 123312, '6415456f', 'otro', '2025-05-15 17:08:06', '2025-05-15 17:08:06');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `is_admin`, `is_student`, `is_tutor`, `study_cycle`, `nia`, `nif`, `gender`, `id_company`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 'admin@admin.com', '$2y$10$zqfYMytw3GMxOp6tG3zUquiXVFeV7bozhfLNGCQQf/PJ3y8t4sbfW', 1, 0, 0, 'DAW', 10477149, '23232323R', 'masculino', NULL, '2025-05-14 16:13:50', '2025-06-12 18:46:33'),
+(2, 'tutor', 'tutor@admin.com', '$2y$10$vAsYWKojYk8oc6Swf7oBC.y.jFzXPJRECxMK02jSfVYqBDqukMqfu', 0, 0, 1, 'DAM', 21213132, '312231e', 'masculino', NULL, '2025-05-15 11:47:51', '2025-06-12 18:46:36'),
+(3, 'usuario', 'usuario@admin.com', '$2y$10$pMUsA.cls3vTtCtNEeTbEOseMEa54jAlz8osqOkVy6ywJGS89UH9a', 0, 1, 0, 'DAW', 123312, '6415456f', 'otro', NULL, '2025-05-15 17:08:06', '2025-06-12 18:46:41');
 
 --
 -- Índices para tablas volcadas
@@ -327,13 +324,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `companies`
 --
 ALTER TABLE `companies`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=388;
 
 --
 -- AUTO_INCREMENT de la tabla `company_deregister_request`
@@ -351,7 +348,7 @@ ALTER TABLE `company_register_request`
 -- AUTO_INCREMENT de la tabla `company_reviews`
 --
 ALTER TABLE `company_reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT de la tabla `failed_jobs`
@@ -369,19 +366,19 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT de la tabla `notices`
 --
 ALTER TABLE `notices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=704;
 
 --
 -- Restricciones para tablas volcadas
