@@ -45,9 +45,11 @@ const Navbar = () => {
 
             {isLoggedIn && (
               <>
+
                 <Link title="Inicio" to="/" className="navbar__link">
                   <div className="icon icon-home"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Inicio</div>
                 </Link>
+
                 {user.is_admin && (
                   <>
                     <Link title="Gestionar Usuarios" to="/user-menu" className="navbar__link">
@@ -59,7 +61,7 @@ const Navbar = () => {
                   </>
                 )}
 
-                {user.is_tutor && (
+                {(user.is_tutor || user.is_admin) && (
                   <>
                     <Link title="Importar usuarios o empresas con excel" to="/import-tutors" className="navbar__link">
                       <div className="icon icon-import"></div><div className="ms-3 fw-bold text-truncate text-uppercase">Importar por Excel</div>
@@ -75,6 +77,7 @@ const Navbar = () => {
                 </Link>
 
                 <LogoutButton />
+                
               </>
             )}
           </div>

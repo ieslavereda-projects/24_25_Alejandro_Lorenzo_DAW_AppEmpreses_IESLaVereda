@@ -114,20 +114,20 @@ const MyProfile = () => {
             .then(r => setReviewData(r.data))
             .catch(() => alert('Error al cargar comentarios'));
     };
-        
+
     const approveReview = id => {
         axios.put(`/api/reviews/${id}`, { approved: 1 })
             .then(() => fetchReviews(reviewPage))
             .catch(() => alert('Error al aprobar el comentario'));
     };
-    
+
     const deleteReview = id => {
         if (!window.confirm('¿Eliminar este comentario?')) return;
         axios.delete(`/api/reviews/${id}`)
             .then(() => fetchReviews(reviewPage))
             .catch(() => alert('Error al eliminar'));
     };
-    
+
     if (!user) return <p>Cargando perfil…</p>;
 
     return (
@@ -240,15 +240,14 @@ const MyProfile = () => {
                 </div>
             </div>
 
-            {user.is_admin && (() => {
-                const pendingReviews = allReviews.filter(r => !r.approved);
 
-                return (
-                    <div className="col-md-6">
-                        <h4>Comentarios por aprobar</h4>
-                        {pendingReviews.length === 0 ? (
-                            <p>No hay comentarios pendientes.</p>
-                        ) : pendingReviews.map(r => (
+            {(user.is_admin || user.is_tutor) && (
+                <div className="col-md-6">
+                    <h4>Comentarios por aprobar</h4>
+                    {pendingReviews.length === 0 ? (
+                        <p>No hay comentarios pendientes.</p>
+                    ) : (
+                        pendingReviews.map(r => (
                             <div key={r.id} className="card mb-2">
                                 <div className="card-body">
                                     <p><strong>{r.user?.name || 'Usuario'}:</strong> {r.comment}</p>
@@ -263,10 +262,13 @@ const MyProfile = () => {
                                     </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                );
-            })()}
+                        ))
+                    )}
+                </div>
+            )}
+
+
+
 
 
 
