@@ -12,6 +12,7 @@ const CompanyDetail = () => {
     const [reviews, setReviews] = useState([]);
     const [isTutor, setIsTutor] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isStudent, setIsStudent] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [tutorForm, setTutorForm] = useState({ comment: '' });
 
@@ -54,6 +55,7 @@ const CompanyDetail = () => {
             .then(({ data }) => {
                 setIsTutor(data.is_tutor);
                 setIsAdmin(data.is_admin);
+                setIsStudent(data.is_student);
                 if (data.is_tutor) {
                     axios.get(`/api/companies/${id}/tutor-comments`)
                         .then(({ data }) => setTutorComments(data))
@@ -258,57 +260,60 @@ const CompanyDetail = () => {
             )}
             <hr />
 
-            <section className="new-review">
-                <h3>Añade un comentario</h3>
-                <form onSubmit={handleSubmit} className='d-flex flex-column'>
-                    <textarea
-                        name="comment"
-                        value={form.comment}
-                        onChange={handleChange}
-                        placeholder="¿Cómo ha sido tu experiencia?"
-                        required
-                    />
-
-                    {[
-                        { field: 'rating', label: 'Puntuación general' },
-
-                    ].map(({ field, label }) => (
-                        <div key={field}>
-                            <label>{label}:</label>
-                            <select
-                                name={field}
-                                value={form[field]}
-                                onChange={handleChange}
-                            >
-                                {[
-                                    { field: 1, label: 'Muy malo' },
-                                    { field: 2, label: 'Malo' },
-                                    { field: 3, label: 'Regular' },
-                                    { field: 4, label: 'Bueno' },
-                                    { field: 5, label: 'Excelente' }
-                                ].map(n => (
-                                    <option key={`rating-${n.field}`} value={n.field}>
-                                        {n.label}
-                                    </option>
-                                ))}
-
-                            </select>
-                        </div>
-                    ))}
-
-                    <label>
-                        <input
-                            type="checkbox"
-                            name="would_recommend"
-                            checked={form.would_recommend}
+            {isStudent &&
+                <section className="new-review">
+                    <h3>Añade un comentario</h3>
+                    <form onSubmit={handleSubmit} className='d-flex flex-column'>
+                        <textarea
+                            name="comment"
+                            value={form.comment}
                             onChange={handleChange}
+                            placeholder="¿Cómo ha sido tu experiencia?"
+                            required
                         />
-                        Lo recomendaría
-                    </label>
 
-                    <button type="submit" className='bg-primary w-100'>Enviar</button>
-                </form>
-            </section>
+                        {[
+                            { field: 'rating', label: 'Puntuación general' },
+
+                        ].map(({ field, label }) => (
+                            <div key={field}>
+                                <label>{label}:</label>
+                                <select
+                                    name={field}
+                                    value={form[field]}
+                                    onChange={handleChange}
+                                >
+                                    {[
+                                        { field: 1, label: 'Muy malo' },
+                                        { field: 2, label: 'Malo' },
+                                        { field: 3, label: 'Regular' },
+                                        { field: 4, label: 'Bueno' },
+                                        { field: 5, label: 'Excelente' }
+                                    ].map(n => (
+                                        <option key={`rating-${n.field}`} value={n.field}>
+                                            {n.label}
+                                        </option>
+                                    ))}
+
+                                </select>
+                            </div>
+                        ))}
+
+                        <label>
+                            <input
+                                type="checkbox"
+                                name="would_recommend"
+                                checked={form.would_recommend}
+                                onChange={handleChange}
+                            />
+                            Lo recomendaría
+                        </label>
+
+                        <button type="submit" className='bg-primary w-100'>Enviar</button>
+                    </form>
+                </section>
+            }
+
 
 
             <section className="reviews">
