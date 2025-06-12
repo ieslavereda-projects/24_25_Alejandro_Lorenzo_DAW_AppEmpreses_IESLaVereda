@@ -22,7 +22,6 @@ class CompanyController extends Controller
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:255',
             'website' => 'nullable|url|max:255',
-            'industry' => 'nullable|string|max:255',
             'observations' => 'nullable|string|max:255',
             'allows_erasmus' => 'nullable|boolean',
         ]);

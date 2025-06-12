@@ -18,7 +18,6 @@ class Company extends Model
         'email',
         'address',
         'website',
-        'industry',
         'observations',
         'allows_erasmus',
         'is_private',
