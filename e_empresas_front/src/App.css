@@ -20,7 +20,7 @@ button {
   box-shadow: none !important;
 }
 
-button:hover:not(:disabled) {
+button:hover:not(:disabled):not(.logout-button) {
   transform: translate(-3px, -3px);
   box-shadow: 3px 3px 0px #000000cb;
 }
@@ -41,7 +41,7 @@ button:hover:not(:disabled) {
 }
 
 .contenido-principal {
-  margin-left: 500px;
+  margin-left: 400px;
   width: calc(100% - 400px);
   padding: 1rem;
 }
