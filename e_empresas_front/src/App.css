@@ -20,7 +20,7 @@ button {
   box-shadow: none !important;
 }
 
-button:hover:not(:disabled):not(.logout-button) {
+button:hover:not(:disabled):not(.navbar__link) {
   transform: translate(-3px, -3px);
   box-shadow: 3px 3px 0px #000000cb;
 }
