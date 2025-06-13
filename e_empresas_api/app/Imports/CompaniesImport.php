@@ -28,16 +28,6 @@ class CompaniesImport implements ToCollection
                 continue;
             }
 
-            $industries = $group->pluck(value: 41)    
-                ->map(fn($v) => trim($v))        
-                ->filter()                      
-                ->unique()                       
-                ->values()                       
-                ->toArray();
-
-            $industryCombined = implode(', ', $industries);
-
-            // 5) Preparar datos
             $firstRow = $group->first();
             $data = [
                 'manager'        => trim(($firstRow[23] ?? '') . ' ' . ($firstRow[24] ?? '') . ' ' . ($firstRow[25] ?? '')),
@@ -45,13 +35,12 @@ class CompaniesImport implements ToCollection
                 'email'          => filter_var(trim($firstRow[19] ?? ''), FILTER_VALIDATE_EMAIL) ?: null,
                 'address'        => trim($firstRow[15] ?? ''),
                 'website'        => '',
-                'industry'       => $industryCombined,
                 'observations'   => '',
                 'allows_erasmus' => strtoupper(trim($firstRow[49] ?? '')) === 'N' ? 0 : 1,
                 'is_private'     => is_numeric($firstRow[20] ?? null) ? (int) $firstRow[20] : 0,
             ];
 
-            Log::info("Fila $firstIndex: importando empresa \"$name\" con industries: " . $industryCombined, $data);
+            Log::info("Fila $firstIndex: importando empresa \"$name\", $data");
 
             Company::updateOrCreate(
                 ['name' => $name],

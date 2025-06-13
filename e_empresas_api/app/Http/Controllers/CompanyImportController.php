@@ -10,15 +10,13 @@ class CompanyImportController extends Controller
 {
     public function import(Request $request)
     {
-        logger('Entrando a CompaniesImport 🚨');
-
         $request->validate([
-            'file' => 'required|mimes:xlsx,xls',
+            'file' => 'required|mimes:xlsx',
         ]);
 
-        logger('Inicio de importación de empresas'); // LOG PARA COMPROBAR ENTRADA
+        logger('Inicio de importación de empresas');
         Excel::import(new CompaniesImport, $request->file('file'));
-        logger('Importación completada'); // LOG DESPUÉS DE EJECUTAR EL IMPORT
+        logger('Importación completada');
 
 
         return response()->json(['message' => 'Empresas importadas correctamente']);

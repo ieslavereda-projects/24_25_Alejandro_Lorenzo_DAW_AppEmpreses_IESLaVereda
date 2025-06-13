@@ -78,9 +78,4 @@ class CompanyController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    public function tutorComments()
-    {
-        return $this->hasMany(Comment::class, 'id_company');
-    }
 }
