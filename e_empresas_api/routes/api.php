@@ -42,21 +42,23 @@ Route::post('/login', function (Request $request) {
     ]);
 });
 
-Route::middleware('auth:sanctum')->post('/logout', function (Request $request) {
-    $user = $request->user();
+Route::middleware('auth:sanctum')->group(function () {
 
-    if ($user) {
-        $user->currentAccessToken()->delete();
-    }
+    Route::post('/logout', function (Request $request) {
+        $request->user()?->currentAccessToken()->delete();
+        return response()->json(['message' => 'Sesión cerrada correctamente']);
+    });
 
-    return response()->json(['message' => 'Sesión cerrada correctamente']);
-});
+    Route::post('/tutors/import', [TutorsImportController::class, 'import']);
+    Route::post('/companies/import', [CompanyImportController::class, 'import']);
 
-Route::middleware('auth:sanctum')->post('/tutors/import', [TutorsImportController::class, 'import']);
-Route::middleware('auth:sanctum')->post('/companies/import', [CompanyImportController::class, 'import']);
+    Route::get('/user', fn(Request $request) => $request->user());
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+    Route::get('/notices', [NoticeController::class, 'index']);
+    Route::post('/notices', [NoticeController::class, 'store']);
+
+    Route::put('/tutor-comments/{comment}', [CommentController::class, 'update']);
+    Route::delete('/tutor-comments/{comment}', [CommentController::class, 'destroy']);
 });
 
 Route::get('/companies/{company}/reviews', [CompanyReviewController::class, 'index']);
@@ -65,15 +67,6 @@ Route::delete('/companies/{company}/reviews/{review}', [CompanyReviewController:
 Route::get('/reviews', [CompanyReviewController::class, 'allReviews']);
 Route::put('/reviews/{id}', [CompanyReviewController::class, 'approve']);
 
-Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/notices', [NoticeController::class, 'index']);
-    Route::post('/notices',[NoticeController::class, 'store']);
-});
-
-Route::get  ('/companies/{company}/tutor-comments', [CommentController::class,'index']);
-Route::post ('/companies/{company}/tutor-comments', [CommentController::class, 'store']);
-Route::middleware('auth:sanctum')->group(function () {
-    Route::put('/tutor-comments/{comment}', [CommentController::class, 'update']);
-    Route::delete('/tutor-comments/{comment}', [CommentController::class, 'destroy']);
-});
+Route::get('/companies/{company}/tutor-comments', [CommentController::class, 'index']);
+Route::post('/companies/{company}/tutor-comments', [CommentController::class, 'store']);
 
