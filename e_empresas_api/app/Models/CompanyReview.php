@@ -19,10 +19,6 @@ class CompanyReview extends Model
     public function company() {
         return $this->belongsTo(Company::class, 'id_company');
     }
-    public function user()
-{
-    return $this->belongsTo(User::class);
-}
 
     public function student() {
         return $this->belongsTo(User::class, 'id_student');
