@@ -242,28 +242,49 @@ const MyProfile = () => {
 
 
             {(user.is_admin || user.is_tutor) && (
-                <div className="col-md-6">
+                <div>
                     <h4>Comentarios por aprobar</h4>
                     {pendingReviews.length === 0 ? (
                         <p>No hay comentarios pendientes.</p>
                     ) : (
-                        pendingReviews.map(r => (
-                            <div key={r.id} className="card mb-2">
-                                <div className="card-body">
-                                    <p><strong>{r.user?.name || 'Usuario'}:</strong> {r.comment}</p>
-                                    <p><strong>Puntuación:</strong> {r.rating}</p>
-                                    <div>
-                                        <button className="btn btn-sm btn-success me-2" onClick={() => approveReview(r.id)}>
-                                            Aprobar
-                                        </button>
-                                        <button className="btn btn-sm btn-danger" onClick={() => deleteReview(r.id)}>
-                                            Eliminar
-                                        </button>
+                        <div className="d-flex flex-wrap">
+                            {pendingReviews.map(r => (
+                                <div key={r.id} className="card mb-2 col-6">
+                                    <div className="card-body">
+                                        <p><strong>{r.student?.name || 'Usuario'}:</strong> {r.comment}</p>
+                                        <p><strong>Puntuación:</strong> {r.rating}</p>
+                                        <div>
+                                            <button className="btn btn-sm btn-success me-2" onClick={() => approveReview(r.id)}>
+                                                Aprobar
+                                            </button>
+                                            <button className="btn btn-sm btn-danger" onClick={() => deleteReview(r.id)}>
+                                                Eliminar
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+                            ))}
+
+                            <div className="mt-3 d-flex justify-content-center col-12">
+                                <button
+                                    className="btn btn-outline-secondary"
+                                    onClick={() => setReviewPage(p => Math.max(1, p - 1))}
+                                    disabled={reviewPage === 1}
+                                >
+                                    ← Anterior
+                                </button>
+                                <span className="align-self-center">Página {reviewPage} de {reviewData.last_page}</span>
+                                <button
+                                    className="btn btn-outline-secondary"
+                                    onClick={() => setReviewPage(p => Math.min(reviewData.last_page, p + 1))}
+                                    disabled={reviewPage === reviewData.last_page}
+                                >
+                                    Siguiente →
+                                </button>
                             </div>
-                        ))
+                        </div>
                     )}
+
                 </div>
             )}
 
