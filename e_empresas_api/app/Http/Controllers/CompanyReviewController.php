@@ -12,10 +12,10 @@ class CompanyReviewController extends Controller
 {
     public function allReviews(Request $request)
     {
-        $reviews = CompanyReview::with(['company', 'user'])
+        $reviews = CompanyReview::with(['company', 'student'])
             ->where('approved', 0)
             ->orderByDesc('created_at')
-            ->paginate(10);
+            ->paginate(6);
 
         return response()->json($reviews);
     }
@@ -76,11 +76,8 @@ class CompanyReviewController extends Controller
         );
     }
 
-    public function destroy(Company $company, CompanyReview $review)
+    public function destroy(CompanyReview $review)
     {
-        if ($review->id_company !== $company->id) {
-            return response()->json(['message' => 'Review no encontrada'], 404);
-        }
         $review->delete();
         return response()->json(null, 204);
     }
