@@ -41,15 +41,6 @@ const CompanyDetail = () => {
         axios.get(`/api/companies/${id}/reviews`)
             .then(({ data }) => setReviews(data))
             .catch(err => console.error('Error al cargar comentarios:', err));
-    }, [id]);
-
-    useEffect(() => {
-        axios.get(`/api/companies/${id}`)
-            .then(({ data }) => setCompany(data));
-
-        axios.get(`/api/companies/${id}/reviews`)
-            .then(({ data }) => setReviews(data))
-            .catch(err => console.error('Error al cargar comentarios:', err));
 
         axios.get(`/api/users/${userId}`)
             .then(({ data }) => {
@@ -118,7 +109,7 @@ const CompanyDetail = () => {
     const handleDelete = reviewId => {
         if (!window.confirm('¿Eliminar tu comentario?')) return;
         axios.delete(
-            `/api/companies/${id}/reviews/${reviewId}`,
+            `/api/reviews/${reviewId}`,
             { headers: { Authorization: `Bearer ${token}` } }
         )
             .then(() => {
@@ -187,13 +178,18 @@ const CompanyDetail = () => {
     return (
         <div className="company-detail col-12 col-lg-10">
             <h2>{company.name}</h2>
-            {averageRating && (
-                <div className="company-average-rating">
-                    <strong>Puntuación media:</strong>
-                    <StarRating value={averageRating} />
-                    {averageRating} / 5
-                </div>
-            )}
+            <div className="company-average-rating">
+                <strong>Puntuación media:</strong>
+                {averageRating ? (
+                    <>
+                        <StarRating value={averageRating} />
+                        {averageRating} / 5
+                    </>
+                ) : (
+                    <span> Aún no hay puntuaciones</span>
+                )}
+            </div>
+
 
             {isTutor && (
                 <>
