@@ -11,7 +11,7 @@ class CompanyImportController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:xlsx',
+            'file' => 'required|mimes:xlsx,xls,csv',
         ]);
 
         logger('Inicio de importación de empresas');

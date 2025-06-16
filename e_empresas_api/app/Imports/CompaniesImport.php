@@ -40,7 +40,7 @@ class CompaniesImport implements ToCollection
                 'is_private'     => is_numeric($firstRow[20] ?? null) ? (int) $firstRow[20] : 0,
             ];
 
-            Log::info("Fila $firstIndex: importando empresa \"$name\", $data");
+            Log::info("Fila $firstIndex: importando empresa \"$name\"", $data);
 
             Company::updateOrCreate(
                 ['name' => $name],
